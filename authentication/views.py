@@ -57,6 +57,8 @@ def signup(request):
         message = "Hello " + myuser.first_name + "!! \n" + "Welcome to GFG!! \nThank you for visiting our website\n. We have also sent you a confirmation email, please confirm your email address. \n\nThanking You\nAnubhav Madhav"        
         from_email = settings.EMAIL_HOST_USER
         to_list = [myuser.email]
+        print("from email host",from_email)
+        print("to list",to_list)
         send_mail(subject, message, from_email, to_list, fail_silently=True)
         
         # Email Address Confirmation Email
@@ -86,7 +88,7 @@ def signup(request):
 
 def activate(request,uidb64,token):
     try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
+        uid = force_str(urlsafe_base64_decode(uidb64))
         myuser = User.objects.get(pk=uid)
     except (TypeError,ValueError,OverflowError,User.DoesNotExist):
         myuser = None
