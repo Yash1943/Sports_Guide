@@ -125,8 +125,8 @@ def signin(request):
                 return redirect('admin1')  # Redirect admin to admin dashboard
             else:
                 # For regular users, you may want to redirect them to a different page or display a message
-                messages.error(request, "Regular users cannot log in here. Please contact admin for access.")
-                return redirect('home')  # Redirect regular users to home page
+                messages.error(request, "Logged In Successfully as Player!!")
+                return redirect('admin1')  # Redirect regular users to home page
         else:
             messages.error(request, "Bad Credentials!!")
             return redirect('home')
