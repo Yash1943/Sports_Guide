@@ -1,4 +1,4 @@
-# Authentication Using Python
+# Sports-Guide
 
 This project provides a simple authentication system implemented in Python. Users can sign up by filling out a form and then receive a confirmation email. Once confirmed, users can sign in to access the system.
 
