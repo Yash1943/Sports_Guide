@@ -6,6 +6,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Sign In</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 90vh;
+        background-color: rgb(0, 100, 250);
+      }
+
+      .container {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .form-container {
+        background-color: rgb(23, 80, 236);
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 400px;
+        color: white;
+        /* align-items: center; */
+      }
+
+      .form-container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .form-container form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-container input {
+        margin-bottom: 20px;
+        padding: 10px;
+        /* border: 10px solid #ae87b2; */
+        border-radius: 4px;
+      }
+
+      .form-container button {
+        padding: 10px;
+       background-color: rgb(6, 172, 10);
+        color: #1a1212;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: medium;
+      }
+
+      .form-container button:hover {
+       background-color: rgb(0, 120, 5);
+      }
+      .a {
+        color: white;
+      }
+    </style>
   </head>
   <body>
     {% for message in messages %}
@@ -16,34 +77,48 @@
       </button>
     </div>
     {% endfor %}
+    <div class="container">
+      <div class="form-container" class="h-screen flex">
+        <h1 class="text-3xl">Welcome to Sport-Guide</h1>
+        <h3 class="m-5 p-2">Log In to your account!</h3>
+        <form method="post" action="/signin" class="mb-2 ml-5 p-2">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              class="form-control border border-2 p-2 w-46 ml-5 text-black"
+              id="username"
+              name="username"
+              placeholder="Enter Your Username"
+              required />
+          </div>
+          <div class="form-group mt-4">
+            <label for="pass1">Password</label>
+            <input
+              type="password"
+              class="form-control border border-2 p-2 w-46 ml-6 text-black"
+              id="pass1"
+              name="pass1"
+              placeholder="Enter Your Password"
+              required />
+          </div>
 
-    <h3 class="m-5 p-2">Log In to your account!</h3>
-    <form method="post" action="/signin" class="mb-2 ml-5 p-2">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          class="form-control border border-2 p-2 w-46"
-          id="username"
-          name="username"
-          placeholder="Enter Your Username"
-          required />
+          <button
+            type="submit"
+            class="btn btn-primary bg-green-300 rounded p-3 m-2 hover:bg-green-600 mt-5">
+            Log In
+          </button>
+           <div class="ml-3 mt-5">
+            Click here for
+            <a
+              href="/signup"
+              class="w-full flex-none text-sm font-medium text-slate-500 mt-5 ml-2 underline"
+              style="color: #8cffdb"
+              >Signup</a
+            >
+        </form>
       </div>
-      <div class="form-group mt-4">
-        <label for="pass1">Password</label>
-        <input
-          type="password"
-          class="form-control border border-2 p-2 w-46 ml-1"
-          id="pass1"
-          name="pass1"
-          placeholder="Enter Your Password"
-          required />
-      </div>
-
-      <button type="submit" class="btn btn-primary bg-green-300 rounded p-3 m-2 hover:bg-green-600">
-        Log In
-      </button>
-    </form>
+    </div>
   </body>
 </html>

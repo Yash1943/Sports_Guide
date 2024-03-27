@@ -6,6 +6,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Sign Up</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 140vh;
+        background-color: rgb(0, 100, 250);
+      }
+
+      .container {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .form-container {
+        background-color: rgb(23, 80, 236);
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 10px;
+        box-shadow: 30px 30px 20px rgba(0, 0, 0, 0.1);
+        margin: 420px;
+        color: white;
+        /* align-items: center; */
+      }
+
+      .form-container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .form-container form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-container input {
+        margin-bottom: 20px;
+        padding: 10px;
+        /* border: 10px solid #ae87b2; */
+        border-radius: 4px;
+      }
+
+      .form-container button {
+        padding: 10px;
+        background-color: rgb(6, 212, 40);
+        color: #1a1212;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: medium;
+      }
+
+      .form-container button:hover {
+        background-color: rgb(6 182 212);
+      }
+      .a {
+        color: white;
+      }
+    </style>
   </head>
   <body>
     {% for message in messages %}
@@ -16,73 +78,68 @@
       </button>
     </div>
     {% endfor %}
+    <div class="container">
+      <div class="form-container" class="h-screen flex">
+        <h1 class="text-3xl">Welcome to Sport-Guide</h1>
+        <h3 class="m-5 p-2">Create your account!</h3>
+        <form method="post" action="/signup" class="m-5 p-4 space-x-2 space-y-3">
+          {% csrf_token %}
+          <label for="username">Username</label>
+          <input
+            type="text"
+            class="form-control border border-2 p-2 w-96 text-black"
+            id="username"
+            name="username"
+            placeholder="Create A Username (use only letters and numbers)"
+            required />
+          <label for="fname">First Name</label>
+          <input
+            type="text"
+            class="form-control border border-2 p-2 w-96 text-black"
+            id="fname"
+            name="fname"
+            placeholder="Enter Your First Name"
+            required />
+          <label for="lname">Last Name</label>
+          <input
+            type="text"
+            class="form-control border border-2 p-2 w-96 text-black"
+            id="lname"
+            name="lname"
+            placeholder="Enter Your Last Name"
+            required />
 
-    <h3 class="p-3 m-5">Create your account!</h3>
-    <form method="post" action="/signup" class="m-5 p-4 space-x-2 space-y-3">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          type="text"
-          class="form-control border border-2 p-2 w-96"
-          id="username"
-          name="username"
-          placeholder="Create A Username (use only letters and numbers)"
-          required />
+          <label for="email">Email</label>
+          <input
+            type="email"
+            class="form-control border border-2 p-2 w-96 ml-9 text-black"
+            id="email"
+            name="email"
+            placeholder="Enter Your Email Address"
+            required />
+          <label for="pass1">Password</label>
+          <input
+            type="password"
+            class="form-control border border-2 p-2 w-96 ml-2 text-black"
+            id="pass1"
+            name="pass1"
+            placeholder="Create Your Password"
+            required />
+          <label for="pass2" class="w-50">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control border border-2 p-2 w-96 text-black"
+            id="pass2"
+            name="pass2"
+            placeholder="Confirm Your Password"
+            required />
+          <button
+            type="submit"
+            class="btn btn-primary bg-green-300 rounded p-3 m-2 hover:bg-green-600">
+            Sign Up
+          </button>
+        </form>
       </div>
-      <div class="form-group">
-        <label for="fname">First Name</label>
-        <input
-          type="text"
-          class="form-control border border-2 p-2 w-96"
-          id="fname"
-          name="fname"
-          placeholder="Enter Your First Name"
-          required />
-      </div>
-      <div class="form-group">
-        <label for="lname">Last Name</label>
-        <input
-          type="text"
-          class="form-control border border-2 p-2 w-96"
-          id="lname"
-          name="lname"
-          placeholder="Enter Your Last Name"
-          required />
-      </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          class="form-control border border-2 p-2 w-96 ml-9"
-          id="email"
-          name="email"
-          placeholder="Enter Your Email Address"
-          required />
-      </div>
-      <div class="form-group">
-        <label for="pass1">Password</label>
-        <input
-          type="password"
-          class="form-control border border-2 p-2 w-96 ml-2"
-          id="pass1"
-          name="pass1"
-          placeholder="Create Your Password"
-          required />
-      </div>
-      <div class="form-group">
-        <label for="pass2" class="w-10">Confirm Password</label>
-        <input
-          type="password"
-          class="form-control border border-2 p-2 w-96"
-          id="pass2"
-          name="pass2"
-          placeholder="Confirm Your Password"
-          required />
-      </div>
-      <button type="submit" class="btn btn-primary bg-green-300 rounded p-3 m-2 hover:bg-green-600">
-        Sign Up
-      </button>
-    </form>
+    </div>
   </body>
 </html>
