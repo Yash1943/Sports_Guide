@@ -119,13 +119,14 @@ def signin(request):
 
 
         if user is not None:
-            login(request, user)
             if user.is_staff:  # Checking if the user is an admin
-                return redirect('admin1')
+                login(request, user)
+                messages.success(request, "Logged In Successfully as Admin!!")
+                return redirect('admin1')  # Redirect admin to admin dashboard
             else:
-                fname = user.first_name
-                messages.success(request, "Logged In Successfully!!")
-                return redirect('usertype')  # Redirect to appropriate view after login
+                # For regular users, you may want to redirect them to a different page or display a message
+                messages.error(request, "Regular users cannot log in here. Please contact admin for access.")
+                return redirect('home')  # Redirect regular users to home page
         else:
             messages.error(request, "Bad Credentials!!")
             return redirect('home')
