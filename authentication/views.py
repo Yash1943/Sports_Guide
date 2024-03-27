@@ -15,8 +15,6 @@ from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 
-
-
 # Create your views here.
 def home(request):
     return render(request, "authentication/index.html")
@@ -124,7 +122,6 @@ def signin(request):
                 messages.success(request, "Logged In Successfully as Admin!!")
                 return redirect('admin1')  # Redirect admin to admin dashboard
             else:
-                # For regular users, you may want to redirect them to a different page or display a message
                 messages.error(request, "Logged In Successfully as Player!!")
                 return redirect('admin1')  # Redirect regular users to home page
         else:
