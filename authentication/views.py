@@ -24,6 +24,16 @@ def admin1(request):
     return render(request, "admin1.html")
 def organizor(request):
     return render(request, "organizor.html")
+def mysession(request):
+    return render(request, "mysession.html")
+def joinedsessions(request):
+    return render(request, "joinedsessions.html")
+def cancel_sessions(request):
+    return render(request, "cancel_sessions.html")
+def change_password(request):
+    return render(request, "change_password.html")
+def report(request):
+    return render(request, "report.html")
 
 def signup(request):
     if request.method == "POST":
