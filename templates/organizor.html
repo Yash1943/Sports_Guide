@@ -70,7 +70,8 @@
           </div>
         </div>
 
-        <form action="/admin" method="post">
+        <form action="organizor" method="post">
+          {% csrf_token %}
           <div class="py-3">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <p class="py-2">Want to create a sport?</p>

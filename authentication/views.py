@@ -13,13 +13,14 @@ from django.contrib.auth import authenticate, login, logout
 from . tokens import generate_token
 from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
-from django.db import IntegrityError
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def home(request):
     return render(request, "authentication/index.html")
 def player(request):
     return render(request, "Player.html")
+@login_required
 def admin1(request):
     return render(request, "admin1.html")
 def organizor(request):
@@ -135,3 +136,4 @@ def signout(request):
     logout(request)
     messages.success(request, "Logged Out Successfully!!")
     return redirect('home')
+

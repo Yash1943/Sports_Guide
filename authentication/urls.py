@@ -11,4 +11,7 @@ urlpatterns = [
     path('admin1', views.admin1, name='admin1'),
     path('player', views.player, name='player'),
     path('organizor', views.organizor, name='organizor'),
+    path('signin/?next=/admin1', views.signin, name='signin'),
+    path('signin/', views.signin, name='signin'),
+    
 ]
