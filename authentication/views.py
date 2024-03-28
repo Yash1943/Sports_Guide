@@ -172,7 +172,7 @@ def signout(request):
 #     users = User.objects.all()
 #     return render(request, "view_users.html", {"users": users})
 
-def get_sports(request):
+def create_sport(request):
     if request.method == "POST":
         id = request.POST.get('id')
         sport_name = request.POST.get('sport_name')
@@ -182,4 +182,4 @@ def get_sports(request):
         print("The Sport is save into the DB")
             #  csports = sport.objects.all()
             #  messages.success(request, "Sport create successfully")
-    return render(request, 'get_sports.html')
+    return render(request, 'organizor.html')

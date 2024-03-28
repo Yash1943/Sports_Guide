@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from .views import create_sport
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -18,6 +19,7 @@ urlpatterns = [
     path('report', views.report, name='report'),
     path('signin/?next=/admin1', views.signin, name='signin'),
      path('signin/', views.signin, name='signin'),
-    # path('create_sports', views.create_sport, name='create_sports'),
-    path('get_sports', views.get_sports, name='get_sports'),
+    path('create_sport', views.create_sport, name='create_sport'),
+    # path('get_sports', views.get_sports, name='get_sports'),
+    #  path('create_sport', create_sport, name='create_sport')
 ]
