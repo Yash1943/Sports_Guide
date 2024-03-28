@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="csrf-token" content="<%=csrfToken%>" />
     <title>Sports-Guide App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/styles.css" />
@@ -70,9 +69,9 @@
           </div>
         </div>
 
-        <form action="/admin1" method="post">
+        <form action="/get_sports" method="post">
+          {% csrf_token %}
           <div class="py-3">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <p class="py-2">Want to create a sport?</p>
             <div class="flex-auto">
               <input
@@ -99,7 +98,29 @@
             </div>
           </div>
         </form>
-        <%- include("admin.ejs",{title:"CREATED SPORTS",data:csports}) %>
+        <div>
+          <h2>Created Sports</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sport in csports %}
+              <tr>
+                <td>{{ sport.id }}</td>
+                <td>{{ sport.sport_name }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="2">No sports created yet</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </body>
