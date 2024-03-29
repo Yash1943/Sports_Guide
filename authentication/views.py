@@ -15,7 +15,7 @@ from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from .models import sport
+from authentication.models import sports
 
 # Create your views here.
 def home(request):
@@ -177,9 +177,14 @@ def create_sport(request):
         id = request.POST.get('id')
         sport_name = request.POST.get('sport_name')
         print(id , sport_name)
-        ins = sport(id=id, sport_name=sport_name)
-        ins.save()
+        sport = sports(id=id, sport_name=sport_name)
+        sport.save()
         print("The Sport is save into the DB")
             #  csports = sport.objects.all()
             #  messages.success(request, "Sport create successfully")
-    return render(request, 'organizor.html')
+    return render(request, 'create_sport.html')
+
+def sport(request):
+    sports_list = sports.objects.all()
+    print("Def sport Excute", sports_list)
+    return render(request, 'organizor.html', {'sports_list': sports_list})

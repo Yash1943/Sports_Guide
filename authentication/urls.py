@@ -20,6 +20,7 @@ urlpatterns = [
     path('signin/?next=/admin1', views.signin, name='signin'),
      path('signin/', views.signin, name='signin'),
     path('create_sport', views.create_sport, name='create_sport'),
+    path('sport', views.sport, name='sport'),
     # path('get_sports', views.get_sports, name='get_sports'),
     #  path('create_sport', create_sport, name='create_sport')
 ]
