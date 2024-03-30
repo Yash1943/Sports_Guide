@@ -1,5 +1,5 @@
 from django.contrib import admin
-from authentication.models import sports
+from authentication.models import Sport
 
 # Register your models here.
-admin.site.register(sports)
+admin.site.register(Sport)

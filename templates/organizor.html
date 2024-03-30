@@ -10,10 +10,11 @@
       var token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
       console.log(token);
       function deleteSport(id) {
-        fetch(`/admin/${id}`, {
+        fetch(`/organizor/${id}`, {
           method: "delete",
           headers: {
             "Content-Type": "application/json",
+            "X-CSRFToken": token, // Include the CSRF token in the headers
           },
           body: JSON.stringify({
             _csrf: token,
@@ -69,7 +70,7 @@
           </div>
         </div>
 
-        <form action="/create_sport" method="post">
+        <form action="/get_sports" method="post">
           {% csrf_token %}
           <div class="py-3">
             <p class="py-2">Want to create a sport?</p>
@@ -102,20 +103,28 @@
           <h2>Created Sports</h2>
           <table>
             <thead>
-              <tr>
+              <tr class="m-4">
                 <th>ID</th>
                 <th>Name</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {% for sport in sports_list %}
+              {% for sport in csports %}
               <tr>
                 <td>{{ sport.id }}</td>
                 <td>{{ sport.sport_name }}</td>
+                <td>
+                  <button
+                    class="bg-red-600 m-2 p-1 rounded text-white"
+                    onclick="deleteSport({{ sport.id }})">
+                    Delete
+                  </button>
+                </td>
               </tr>
               {% empty %}
               <tr>
-                <td colspan="2">No sports created yet</td>
+                <td colspan="3" class="no-sports">No sports created yet</td>
               </tr>
               {% endfor %}
             </tbody>

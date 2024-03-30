@@ -15,14 +15,17 @@ from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from authentication.models import sports
-
+from .models import Sport
+from .forms import SportForm 
 # Create your views here.
 def home(request):
     return render(request, "authentication/index.html")
 @login_required
 def player(request):
-    return render(request, "Player.html")
+      csports = Sport.objects.all()
+      return render(request, 'Player.html', {'csports': csports})
+
+
 @login_required
 def admin1(request):
     return render(request, "admin1.html")
@@ -172,19 +175,29 @@ def signout(request):
 #     users = User.objects.all()
 #     return render(request, "view_users.html", {"users": users})
 
-def create_sport(request):
+# 
+
+
+def get_sports(request):
     if request.method == "POST":
         id = request.POST.get('id')
         sport_name = request.POST.get('sport_name')
         print(id , sport_name)
-        sport = sports(id=id, sport_name=sport_name)
-        sport.save()
+        ins = Sport(id=id, sport_name=sport_name)
+        ins.save()
         print("The Sport is save into the DB")
-            #  csports = sport.objects.all()
-            #  messages.success(request, "Sport create successfully")
-    return render(request, 'create_sport.html')
+        csports = Sport.objects.all()
+        messages.success(request, "Sport create successfully")
+        return render(request, 'organizor.html' ,{'csports': csports})
+    else:
+        csports = Sport.objects.all()
+        return render(request, 'organizor.html', {'csports': csports})
 
-def sport(request):
-    sports_list = sports.objects.all()
-    print("Def sport Excute", sports_list)
-    return render(request, 'organizor.html', {'sports_list': sports_list})
+# def delete_sport(request, id):
+#     if request.method == 'DELETE':
+#         try:
+#             sport = Sport.objects.get(id=id)
+#             sport.delete()
+#             return HttpResponse(status=204)
+#         except Sport.DoesNotExist:
+#             return HttpResponse(status=404)
