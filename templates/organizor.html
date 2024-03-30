@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="csrf-token" content="<%=csrfToken%>" />
     <title>Sports-Guide App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/styles.css" />
@@ -11,10 +10,11 @@
       var token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
       console.log(token);
       function deleteSport(id) {
-        fetch(`/admin/${id}`, {
+        fetch(`/organizor/${id}`, {
           method: "delete",
           headers: {
             "Content-Type": "application/json",
+            "X-CSRFToken": token, // Include the CSRF token in the headers
           },
           body: JSON.stringify({
             _csrf: token,
@@ -59,7 +59,7 @@
 
         <div class="navbar">
           <div>
-            <a href="/reports">Reports</a>
+            <a href="/report">Reports</a>
             <a href="/mysession">My sessions</a>
           </div>
           <div>
@@ -70,10 +70,9 @@
           </div>
         </div>
 
-        <form action="organizor" method="post">
+        <form action="/get_sports" method="post">
           {% csrf_token %}
           <div class="py-3">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <p class="py-2">Want to create a sport?</p>
             <div class="flex-auto">
               <input
@@ -100,7 +99,37 @@
             </div>
           </div>
         </form>
-        <%- include("admin.ejs",{title:"CREATED SPORTS",data:csports}) %>
+        <div>
+          <h2>Created Sports</h2>
+          <table>
+            <thead>
+              <tr class="m-4">
+                <th>ID</th>
+                <th>Name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sport in csports %}
+              <tr>
+                <td>{{ sport.id }}</td>
+                <td>{{ sport.sport_name }}</td>
+                <td>
+                  <button
+                    class="bg-red-600 m-2 p-1 rounded text-white"
+                    onclick="deleteSport({{ sport.id }})">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="3" class="no-sports">No sports created yet</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </body>
