@@ -25,13 +25,13 @@ def player(request):
       csports = Sport.objects.all()
       return render(request, 'Player.html', {'csports': csports})
 
-
 @login_required
 def admin1(request):
     return render(request, "admin1.html")
 @login_required
 def organizor(request):
-    return render(request, "organizor.html")
+     csports = Sport.objects.all()
+     return render(request, 'organizor.html', {'csports': csports})
 @login_required
 def mysession(request):
     return render(request, "mysession.html")
@@ -135,10 +135,7 @@ def signin(request):
     if request.method == 'POST':
         username = request.POST['username']
         pass1 = request.POST['pass1']
-        
         user = authenticate(username=username, password=pass1)
-
-
         if user is not None:
             if user.is_staff:  # Checking if the user is an admin
                 login(request, user)
@@ -150,7 +147,6 @@ def signin(request):
         else:
             messages.error(request, "Bad Credentials!!")
             return redirect('home')
-    
     return render(request, "authentication/signin.html")
 
 
@@ -158,25 +154,6 @@ def signout(request):
     logout(request)
     messages.success(request, "Logged Out Successfully!!")
     return redirect('home')
-
-
-
-# def create_sport(request):
-#     if request.method == 'POST':
-#         id = request.POST.get('id')
-#         sport_name = request.POST.get('sport_name')
-#         # Assuming you have a Sport model to store sports
-#         Sport.objects.create(id=id, name=sport_name)
-#         messages.success(request, "Sport created successfully!")
-#         return redirect('admin1')  # Redirect back to admin dashboard
-#     return render(request, "create_sport.html")  # Template with form for creating sports
-
-# def view_users(request):
-#     users = User.objects.all()
-#     return render(request, "view_users.html", {"users": users})
-
-# 
-
 
 def get_sports(request):
     if request.method == "POST":

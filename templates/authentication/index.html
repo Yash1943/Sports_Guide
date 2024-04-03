@@ -32,7 +32,7 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    {% endfor %}
+    {% endfor %} {% comment %}
     <h3 class="m-5 p-2 bg-blue-300">Welcome To Sport Guide</h3>
     {% if user.is_authenticated %}
     <h3 class="ml-5">Hello {{fname}}!</h3>
@@ -40,7 +40,8 @@
     <button type="submit" class="m-5 p-2 bg-blue-400 rounded hover:bg-blue-600">
       <a href="/signout">SignOut</a>
     </button>
-    {% else %}
+    {% else %} {% endcomment %}
+    <h3 class="m-5 p-2 bg-blue-300">Welcome To Sport Guide</h3>
     <button type="submit" class="m-5 p-2 bg-blue-400 rounded hover:bg-blue-600">
       <a href="/signup">SignUp</a>
     </button>
@@ -49,6 +50,6 @@
     <button type="submit" class="m-5 p-2 bg-blue-400 rounded hover:bg-blue-600">
       <a href="/signin">SignIn</a>
     </button>
-    {% endif %}
+    {% comment %} {% endif %} {% endcomment %}
   </body>
 </html>
