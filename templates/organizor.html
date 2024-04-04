@@ -6,31 +6,19 @@
     <title>Sports-Guide App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/styles.css" />
-    <script>
-      var token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-      console.log(token);
-      function deleteSport(id) {
-        fetch(`/organizor/${id}`, {
-          method: "delete",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": token, // Include the CSRF token in the headers
-          },
-          body: JSON.stringify({
-            _csrf: token,
-          }),
-        })
-          .then((res) => {
-            if (res.ok) {
-              window.location.reload();
-            }
-          })
-          .catch((err) => console.error(err));
-      }
-    </script>
   </head>
 
   <body>
+      <div>
+     {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <strong>Message:</strong> {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+  </div>
     <div style="text-align: center; font-weight: bold; padding: 10px; background-color: #eee">
       {{fname}}! &nbsp YOU ARE ADMIN NOW!! YOU CAN CREATE A SPORT, DELETE A SPORT, CREATE A SESSION
     </div>
@@ -115,16 +103,13 @@
                 <td>{{ sport.id }}</td>
                 <td>{{ sport.sport_name }}</td>
                 <td>
-                  {% for sport in csports %} {% comment %}
+                  {% comment %}
                   <p>{{ sport.sport_name }}</p>
                   {% endcomment %}
                   <form action="{% url 'delete_sport' sport.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="bg-red-600 m-2 p-1 rounded text-white">
-                      Delete
-                    </button>
+                    <button type="submit" name="delete_sport_{{ sport.id }}">Delete</button>
                   </form>
-                  {% endfor %}
                 </td>
               </tr>
               {% empty %}

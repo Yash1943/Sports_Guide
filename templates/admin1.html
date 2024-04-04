@@ -49,6 +49,7 @@
   </head>
 
   <body>
+  
     <a
       href="/signout"
       class="fixed top-4 right-4 bg-white text-blue-600 px-4 py-2 rounded font-medium shadow hover:bg-blue-600 hover:text-white"
@@ -56,15 +57,19 @@
     >
 
     <div class="content">
+        <div>
+     {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <strong>Message:</strong> {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+  </div>
       <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
       <div class="w-full p-4">
         <h1 class="text-3xl font-bold mb-5">Welcome {{fname}}!</h1>
-        {% if user %}
-  <p>User object exists</p>
-  <p>User is staff: {{ user.is_staff }}</p>
-{% else %}
-  <p>User object does not exist</p>
-{% endif %}
         <p class="mb-4">Please select your role:</p>
 
         {% if user.is_staff %}
