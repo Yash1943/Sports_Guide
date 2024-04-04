@@ -142,6 +142,7 @@ def signin(request):
                 messages.success(request, "Logged In Successfully as Admin!!")
                 return redirect('admin1')  # Redirect admin to admin dashboard
             else:
+                login(request, user)
                 messages.error(request, "Logged In Successfully as Player!!")
                 return redirect('admin1')  # Redirect regular users to home page
         else:
@@ -170,11 +171,31 @@ def get_sports(request):
         csports = Sport.objects.all()
         return render(request, 'organizor.html', {'csports': csports})
 
-# def delete_sport(request, id):
-#     if request.method == 'DELETE':
-#         try:
-#             sport = Sport.objects.get(id=id)
-#             sport.delete()
-#             return HttpResponse(status=204)
-#         except Sport.DoesNotExist:
-#             return HttpResponse(status=404)
+from django.http import JsonResponse
+
+def delete_sport(request, sport_id):
+    try:
+        sport = Sport.objects.get(id=sport_id)
+        sport.delete()
+        return JsonResponse({'message': 'Sport deleted successfully'}, status=200)
+    except Sport.DoesNotExist:
+        return JsonResponse({'error': 'Sport not found'}, status=404)
+
+# from django.shortcuts import get_object_or_404
+
+# def delete_sport(request, sport_id):
+#     # Assuming Todo is the model name and 'todo_id' is the parameter
+#     sport = get_object_or_404(Sport, pk=sport_id)
+#     sport.delete()
+#     # Redirect to a page where you want to go after deletion
+#     return redirect('organizor')  # Redirecting to a hypothetical todo list view
+
+def delete_sport(request, id):
+    if request.method == 'POST':
+        sport = Sport.objects.get(pk=id)
+        sport.delete()
+        messages.success(request, "Sport deleted successfully")
+        return redirect('get_sports')
+    else:
+        messages.error(request, "Invalid request method")
+        return redirect('get_sports')

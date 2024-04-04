@@ -115,11 +115,16 @@
                 <td>{{ sport.id }}</td>
                 <td>{{ sport.sport_name }}</td>
                 <td>
-                  <button
-                    class="bg-red-600 m-2 p-1 rounded text-white"
-                    onclick="deleteSport({{ sport.id }})">
-                    Delete
-                  </button>
+                  {% for sport in csports %} {% comment %}
+                  <p>{{ sport.sport_name }}</p>
+                  {% endcomment %}
+                  <form action="{% url 'delete_sport' sport.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-600 m-2 p-1 rounded text-white">
+                      Delete
+                    </button>
+                  </form>
+                  {% endfor %}
                 </td>
               </tr>
               {% empty %}
