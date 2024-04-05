@@ -6,71 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Sign In</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 90vh;
-        background-color: rgb(147, 197, 253)
-      }
-
-      .container {
-        display: flex;
-        flex-direction: row;
-      }
-
-      .form-container {
-        background-color: rgb(3, 110, 210);
-        padding: 40px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin: 400px;
-        color: white;
-        /* align-items: center; */
-      }
-
-      .form-container h1 {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-
-      .form-container form {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .form-container input {
-        margin-bottom: 20px;
-        padding: 10px;
-        /* border: 10px solid #ae87b2; */
-        border-radius: 4px;
-      }
-
-      .form-container button {
-        padding: 10px;
-       background-color: rgb(72, 173, 241);
-        color: #1a1212;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: medium;
-      }
-
-      .form-container button:hover {
-       background-color: rgb(79, 207, 229);
-      }
-      .a {
-        color: white;
-      }
-    </style>
   </head>
-  <body>
-    <div class="container">
-      <div class="form-container" class="h-screen flex">
+  <body class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white">
+    <div class="container mx-auto flex justify-center items-center h-screen">
+      <div class="bg-gray-800 px-10 py-8 rounded-lg shadow-lg">
              {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
       <strong>Message:</strong> {{ message }}
@@ -87,7 +26,7 @@
             <label for="username">Username</label>
             <input
               type="text"
-              class="form-control border border-2 p-2 w-46 ml-5 text-black"
+             class="w-full px-3 py-2 rounded-md text-black focus:text-white focus:outline-none focus:bg-gray-700"
               id="username"
               name="username"
               placeholder="Enter Your Username"
@@ -97,7 +36,7 @@
             <label for="pass1">Password</label>
             <input
               type="password"
-              class="form-control border border-2 p-2 w-46 ml-6 text-black"
+              class="w-full px-3 py-2 rounded-md text-black focus:text-white focus:outline-none focus:bg-gray-700"
               id="pass1"
               name="pass1"
               placeholder="Enter Your Password"
@@ -106,7 +45,7 @@
 
           <button
             type="submit"
-            class="btn btn-primary bg-green-300 rounded p-3 m-2 hover:bg-green-600 mt-5">
+            class="w-full bg-green-500 text-white font-semibold m-3 p-2 mr-4 rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-600">
             Log In
           </button>
            <div class="ml-3 mt-5">

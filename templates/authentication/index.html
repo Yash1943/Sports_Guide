@@ -1,55 +1,116 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <title>Home Page</title>
-
-    <style>
-      body {
-        background-image: url('{% static "image.jpg" %}');
-        background-size: cover;
-        background-size: 1500px;
-      }
-
-      .content {
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-    </style>
+    <title>Sport-Guide</title>
+    <!-- Include Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet" />
   </head>
-  <body>
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-      <strong>Message:</strong> {{ message }}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% endfor %} {% comment %}
-    <h3 class="m-5 p-2 bg-blue-300">Welcome To Sport Guide</h3>
-    {% if user.is_authenticated %}
-    <h3 class="ml-5">Hello {{fname}}!</h3>
-    <h4 class="ml-5">You're successfully logged in.</h4>
-    <button type="submit" class="m-5 p-2 bg-blue-400 rounded hover:bg-blue-600">
-      <a href="/signout">SignOut</a>
-    </button>
-    {% else %} {% endcomment %}
-    <h3 class="m-5 p-2 bg-blue-300">Welcome To Sport Guide</h3>
-    <button type="submit" class="m-5 p-2 bg-blue-400 rounded hover:bg-blue-600">
-      <a href="/signup">SignUp</a>
-    </button>
-    <br />
-    <br />
-    <button type="submit" class="m-5 p-2 bg-blue-400 rounded hover:bg-blue-600">
-      <a href="/signin">SignIn</a>
-    </button>
-    {% comment %} {% endif %} {% endcomment %}
+
+  <body class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white">
+    <!-- Navigation bar -->
+    <nav class="bg-gray-900 p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="#" class="text-white text-2xl font-bold">Sport-Guide</a>
+        <ul class="flex space-x-4">
+          <li>
+            <a
+              href="#"
+              class="text-white hover:bg-gray-800 hover:text-gray-200 px-3 py-2 rounded transition duration-300"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="text-white hover:bg-gray-800 hover:text-gray-200 px-3 py-2 rounded transition duration-300"
+              >Sports</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="text-white hover:bg-gray-800 hover:text-gray-200 px-3 py-2 rounded transition duration-300"
+              >About</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="text-white hover:bg-gray-800 hover:text-gray-200 px-3 py-2 rounded transition duration-300"
+              >Contact</a
+            >
+          </li>
+          <li>
+            <a
+              href="/signin"
+              class="text-white hover:bg-gray-800 hover:text-gray-200 px-3 py-2 rounded transition duration-300"
+              >Sign In</a
+            >
+          </li>
+          <li>
+            <a
+              href="/signup"
+              class="text-white hover:bg-gray-800 hover:text-gray-200 px-3 py-2 rounded transition duration-300"
+              >Sign Up</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="container mx-auto mt-8">
+      <div class="p-12 m-8 bg-gray-800 rounded-lg shadow-xl text-center">
+        <h1 class="text-5xl font-bold mb-4">Welcome to Sport-Guide</h1>
+        <p class="text-lg mb-4">Build strong teams, manage sessions, and collaborate online!</p>
+        <p class="mb-4">
+          Sport-Guide is your ultimate platform for creating and managing sports teams efficiently. Whether you're a coach, player, or enthusiast, we provide tools to streamline team building, session planning, and online collaboration.
+        </p>
+        <a
+          href="#"
+          class="inline-block bg-white text-gray-900 px-8 py-4 rounded-md shadow-md font-semibold hover:bg-gray-200 transition duration-300"
+          >Learn More</a
+        >
+        <div class="container mx-auto text-center">
+      </div>
+    </div><br><br>
+
+    <!-- App details -->
+    <!-- <section class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 py-12"> -->
+      <div class="container mx-auto text-center">
+        <div class="p-12 m-8 bg-gray-800 rounded-lg shadow-xl text-center">
+        <h2 class="text-3xl font-bold mb-4">Sign In / Sign Up</h2>
+         <p class="text-lg mb-4">Get started now and build your dream team!</p>
+        <div class="flex justify-center">
+          <a
+            href="/signin"
+            class="inline-block bg-white text-gray-900 px-8 py-4 rounded-md shadow-md mr-4 hover:bg-gray-200 transition duration-300"
+            >Sign In</a
+          >
+          <a
+            href="/signup"
+            class="inline-block bg-white text-gray-900 px-8 py-4 rounded-md shadow-md hover:bg-gray-200 transition duration-300"
+            >Sign Up</a
+          >
+        </div>
+        </div>
+      </div><br>
+    <!-- </section> -->
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+      <div class="container mx-auto text-center">
+        <p>&copy; 2024 Sport-Guide. All rights reserved.</p>
+        <div class="mt-4">
+          <a href="#" class="inline-block mx-2 hover:text-gray-400">Privacy Policy</a>
+          <a href="#" class="inline-block mx-2 hover:text-gray-400">Terms of Service</a>
+          <a href="#" class="inline-block mx-2 hover:text-gray-400">Contact Us</a>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
