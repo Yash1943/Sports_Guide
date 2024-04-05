@@ -154,7 +154,7 @@ def signin(request):
 def signout(request):
     logout(request)
     messages.success(request, "Logged Out Successfully!!")
-    return redirect('home')
+    return redirect('signin')
 
 def get_sports(request):
     if request.method == "POST":
