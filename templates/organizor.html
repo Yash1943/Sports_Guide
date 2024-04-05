@@ -9,16 +9,16 @@
   </head>
 
   <body>
-      <div>
-     {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-      <strong>Message:</strong> {{ message }}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+    <div>
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <strong>Message:</strong> {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
-  </div>
     <div style="text-align: center; font-weight: bold; padding: 10px; background-color: #eee">
       {{fname}}! &nbsp YOU ARE ADMIN NOW!! YOU CAN CREATE A SPORT, DELETE A SPORT, CREATE A SESSION
     </div>
@@ -81,7 +81,7 @@
             <div class="flex-none">
               <button
                 type="submit"
-                class="bg-blue-600 text-white px-5 py-1.5 rounded font-medium mb-2">
+                class="bg-blue-600 text-white px-5 py-1.5 rounded font-medium mb-2 hover:bg-blue-700">
                 Create
               </button>
             </div>
@@ -108,7 +108,12 @@
                   {% endcomment %}
                   <form action="{% url 'delete_sport' sport.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" name="delete_sport_{{ sport.id }}">Delete</button>
+                    <button
+                      type="submit"
+                      class="bg-red-500 p-2 m-3 rounded text-white hover:bg-red-700"
+                      name="delete_sport_{{ sport.id }}">
+                      Delete
+                    </button>
                   </form>
                 </td>
               </tr>
