@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
 
-  <body>
+  <body class="bg-gray-900 via-pink-500 to-red-500 text-white">
     <div>
       {% for message in messages %}
       <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -19,99 +19,68 @@
       </div>
       {% endfor %}
     </div>
-    <div style="text-align: center; font-weight: bold; padding: 10px; background-color: #eee">
-      {{fname}}! &nbsp YOU ARE ADMIN NOW!! YOU CAN CREATE A SPORT, DELETE A SPORT, CREATE A SESSION
+    <div class="text-center font-bold py-4 bg-gray-900">
+      {{ fname }}! &nbsp YOU ARE ADMIN NOW!! YOU CAN CREATE A SPORT, DELETE A SPORT, CREATE A
+      SESSION
     </div>
     <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-2">
-        <style>
-          /* Container styles */
-          .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #003366;
-            padding: 10px;
-          }
-
-          .navbar a {
-            color: white;
-            text-decoration: none;
-            margin-right: 10px;
-          }
-
-          .navbar a:hover {
-            text-decoration: underline;
-          }
-        </style>
-
-        <div class="navbar">
-          <div>
-            <a href="/report">Reports</a>
-            <a href="/mysession">My sessions</a>
+        <div class="navbar flex justify-between items-center bg-gray-800 py-4 px-6">
+          <div class="flex space-x-4">
+            <a href="/report" class="text-white hover:underline">Reports</a>
+            <a href="/mysession" class="text-white hover:underline">My sessions</a>
           </div>
-          <div>
-            <a href="/signout">Sign Out</a>
-          </div>
-          <div>
-            <a href="/player">Continue as a Player</a>
+          <div class="flex space-x-4">
+            <a href="/signout" class="text-white hover:underline">Sign Out</a>
+            <a href="/player" class="text-white hover:underline">Continue as a Player</a>
           </div>
         </div>
 
-        <form action="/get_sports" method="post">
+        <form action="/get_sports" method="post" class="mt-6">
           {% csrf_token %}
-          <div class="py-3">
-            <p class="py-2">Want to create a sport?</p>
-            <div class="flex-auto">
-              <input
-                type="number"
-                name="id"
-                placeholder="Enter the ID"
-                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm mb-2"
-                required />
-            </div>
-            <div class="flex-auto">
-              <input
-                type="text"
-                name="sport_name"
-                placeholder="Enter the sport name!"
-                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm mb-2"
-                required />
-            </div>
-            <div class="flex-none">
-              <button
-                type="submit"
-                class="bg-blue-600 text-white px-5 py-1.5 rounded font-medium mb-2 hover:bg-blue-700">
-                Create
-              </button>
-            </div>
+          <div class="flex flex-col space-y-4">
+            <p class="font-semibold">Want to create a sport?</p>
+            <input
+              type="number"
+              name="id"
+              placeholder="Enter the ID"
+              class="border border-gray-300 rounded p-2 bg-gray-700 text-sm text-black focus:text-white focus:outline-none focus:bg-gray-700"
+              required />
+            <input
+              type="text"
+              name="sport_name"
+              placeholder="Enter the sport name!"
+              class="border border-gray-300 rounded p-2 text-sm bg-gray-700 text-sm text-black focus:text-white focus:outline-none focus:bg-gray-700"
+              required />
+            <button
+              type="submit"
+              class="bg-blue-600 text-white px-5 py-2 rounded font-medium hover:bg-blue-700">
+              Create
+            </button>
           </div>
         </form>
-        <div>
-          <h2>Created Sports</h2>
-          <table>
+
+        <div class="mt-6">
+          <h2 class="text-lg font-semibold mb-2">Created Sports</h2>
+          <table class="w-full">
             <thead>
-              <tr class="m-4">
-                <th>ID</th>
-                <th>Name</th>
-                <th>Action</th>
+              <tr class="bg-gray-900 border border-gray-400">
+                <th class="py-2 px-4">ID</th>
+                <th class="py-2 px-4">Name</th>
+                <th class="py-2 px-4">Action</th>
               </tr>
             </thead>
             <tbody>
               {% for sport in csports %}
-              <tr>
-                <td>{{ sport.id }}</td>
-                <td>{{ sport.sport_name }}</td>
-                <td>
-                  {% comment %}
-                  <p>{{ sport.sport_name }}</p>
-                  {% endcomment %}
+              <tr class="border-b">
+                <td class="py-2 px-4">{{ sport.id }}</td>
+                <td class="py-2 px-4">{{ sport.sport_name }}</td>
+                <td class="py-2 px-4">
                   <form action="{% url 'delete_sport' sport.id %}" method="post">
                     {% csrf_token %}
                     <button
                       type="submit"
-                      class="bg-red-500 p-2 m-3 rounded text-white hover:bg-red-700"
-                      name="delete_sport_{{ sport.id }}">
+                      class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700">
                       Delete
                     </button>
                   </form>
@@ -119,7 +88,7 @@
               </tr>
               {% empty %}
               <tr>
-                <td colspan="3" class="no-sports">No sports created yet</td>
+                <td colspan="3" class="text-gray-500 text-sm py-4">No sports created yet</td>
               </tr>
               {% endfor %}
             </tbody>

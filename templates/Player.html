@@ -1,48 +1,81 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="csrf-token" content="<%= csrfToken %>" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <title>Player</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- <link rel="stylesheet" href="/css/styles.css" /> -->
     <style>
-      /* ... */
+      /* Container styles */
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #003366;
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar a {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+      }
+
+      .navbar a:hover {
+        text-decoration: underline;
+      }
+
+      /* Dropdown styles */
+      .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 12rem;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+        display: none;
+      }
+
+      .dropdown-menu a {
+        display: block;
+        padding: 0.5rem 1rem;
+        color: #333;
+        font-size: 14px;
+        text-decoration: none;
+      }
+
+      .dropdown-menu a:hover {
+        background-color: #f3f4f6;
+      }
     </style>
-  </head>
+</head>
 
-  <body class="bg-grey-900">
+<body class="bg-gray-900">
     <div class="container mx-auto p-8">
-      <nav class="navbar flex justify-between items-center p-4 bg-green-100 shadow">
-        <a href="/player" class="navbar-brand text-2xl font-bold text-gray-800">Sports-Guide</a>
-        <div class="navbar-links flex items-center space-x-4">
-          {% if user.is_staff %}
-          <a
-            href="/organizor"
-            class="text-sm text-gray-800 hover:text-gray-600 transition duration-300"
-            >Admin Page</a
-          >
-          <a
-            href="/mysession"
-            class="text-sm text-gray-800 hover:text-gray-600 transition duration-300"
-            >My Sessions</a
-          >
-          <a
-            href="/joinedsessions"
-            class="text-sm text-gray-800 hover:text-gray-600 transition duration-300"
-            >Joined Sessions</a
-          >
-          <a
-            href="/cancel_sessions"
-            class="text-sm text-gray-800 hover:text-gray-600 transition duration-300"
-            >Cancelled Sessions</a
-          >
-          <div class="relative">
+        <nav class="navbar flex justify-between items-center p-4 bg-black-600 shadow">
+            <a href="/player" class="navbar-brand text-3xl font-bold text-gray-800">Sports-Guide</a>
+            <div class="navbar-links flex items-center space-x-4">
+                {% if user.is_staff %}
+                <a href="/organizor" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">Admin Page</a>
+                <a href="/mysession" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">My Sessions</a>
+                <a href="/joinedsessions" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">Joined Sessions</a>
+                <a href="/cancel_sessions" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">Cancelled Sessions</a>
+                {% else %}
+                <a href="/mysession" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">My Sessions</a>
+                <a href="/joinedsessions" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">Joined Sessions</a>
+                <a href="/cancel_sessions" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">Cancelled Sessions</a>
+                {% endif %}
+                <div class="relative">
             <!-- Account icon -->
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 cursor-pointer text-gray-800"
+              class="h-6 w-6 cursor-pointer text-white-800"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -56,10 +89,10 @@
             <!-- Dropdown menu -->
             <div
               id="accountDropdown"
-              class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-10">
+              class="hidden absolute bg-gray-900 right-0 mt-2 w-48 rounded-md shadow-lg py-2 z-10">
               <a
                 href="/signout"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                class="block px-4 py-2 text-sm  hover:bg-gray-100 hover:text-gray-900"
                 >Sign Out</a
               >
               <a
@@ -67,74 +100,28 @@
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                 >Change Password</a
               >
-          {% else %}
-          <a
-            href="/mysession"
-            class="text-sm text-gray-800 hover:text-gray-600 transition duration-300"
-            >My Sessions</a
-          >
-          <a
-            href="/joinedsessions"
-            class="text-sm text-gray-800 hover:text-gray-600 transition duration-300"
-            >Joined Sessions</a
-          >
-          <a
-            href="/cancel_sessions"
-            class="text-sm text-gray-800 hover:text-gray-600 transition duration-300"
-            >Cancelled Sessions</a
-          >
-          <div class="relative">
-            <!-- Account icon -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 cursor-pointer text-gray-800"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              onclick="toggleDropdown()">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16m-7 6h7"></path>
-            </svg>
-            <!-- Dropdown menu -->
-            <div
-              id="accountDropdown"
-              class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-10">
-              <a
-                href="/signout"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                >Sign Out</a
-              >
-              <a
-                href="/change_password"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                >Change Password</a
-              >
-              {% endif %}
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </nav>
-      {% comment %} <div class="w-30px "> {% endcomment %}
-  {% if csports %}
-  <h2 class="text-2xl text-red-900 mb-4">List of Sports:</h2>
-  <ul class="sports-list w-30">
-    {% for sport in csports %}
-      <li class="text-white bg-cyan-500 shadow-lg shadow-cyan-500/50 px-5 py-1.5 rounded font-medium hover:underline m-2">{{ sport.sport_name }}</li>
-    {% endfor %}
-  </ul>
-   {% else %}
-  <p>No sports created yet</p>
-   {% endif %}
-</div> 
-  </body>
+        </nav>
+        {% comment %} <div class="w-30px "> {% endcomment %}
+        {% if csports %}
+        <h2 class="text-2xl text-red-900 mb-4">List of Sports:</h2>
+        <ul class="sports-list w-30">
+            {% for sport in csports %}
+            <li class="text-white bg-cyan-500 shadow-lg shadow-cyan-500/50 px-5 py-1.5 rounded font-medium hover:underline m-2">{{ sport.sport_name }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No sports created yet</p>
+        {% endif %}
+    </div>
+</body>
 
-  <script>
+<script>
     function toggleDropdown() {
-      var dropdown = document.getElementById("accountDropdown");
-      dropdown.classList.toggle("hidden");
+        var dropdown = document.getElementById("accountDropdown");
+        dropdown.classList.toggle("hidden");
     }
-  </script>
+</script>
 </html>
