@@ -199,3 +199,7 @@ def delete_sport(request, id):
     else:
         messages.error(request, "Invalid request method")
         return redirect('get_sports')
+    
+def recommendation_page(request,sport_id):
+    # Logic to render the recommendation page
+    return render(request, 'createsession.html',  {'sport_id': sport_id})    

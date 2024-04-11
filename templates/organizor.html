@@ -71,12 +71,14 @@
                 <th class="py-2 px-4">Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="mx-10">
               {% for sport in csports %}
               <tr class="border-b">
                 <td class="py-2 px-4">{{ sport.id }}</td>
-                <td class="py-2 px-4">{{ sport.sport_name }}</td>
-                <td class="py-2 px-4">
+                <td class="py-2 px-4 hover:underline">
+                  <a href="{% url 'createsession' sport.id %}">{{ sport.sport_name }}</a>
+                </td>
+                <td class="py-2 px-1">
                   <form action="{% url 'delete_sport' sport.id %}" method="post">
                     {% csrf_token %}
                     <button
