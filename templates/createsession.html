@@ -1,66 +1,71 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="<%=csrfToken%>" />
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sports-Guide</title>
+    <link rel="icon" href="/static/icon.png" type="image/x-icon" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/css/styles.css" />
-    <title>
-        <%= title %>
-    </title>
-</head>
+    {% comment %} <link rel="stylesheet" href="/css/styles.css" /> {% endcomment %}
+  </head>
 
-<body>
+  <body class="bg-gray-900 text-white">
     <div class="container mx-auto px-4">
-        <h1 class="text-left mb-4">Create new <%=sportName%> Session</h1>
-        <form action="/create-session?sportname=<%=sportName%>" method="post">
+      <h1 class="text-left mb-4 text-3xl font-semibold">Create {{ sport_name }} new Session</h1>
+      <form action="{% url 'create_session' %}" method="post" class="max-w-md mx-auto">
+        {% csrf_token %}
         <div class="py-3">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <div class="mb-4">
-                <label for="venue" class="block mb-2">Venue:</label>
-                <input type="text" name="venue" id="venue" class="border border-gray-300 text-gray-900 rounded p-2 w-full"
-                    required>
-            </div>
-        
-            <div class="mb-4">
-                <label for="numberOfTeams" class="block mb-2">Number of Teams:</label>
-                <input type="number" name="numberofTeams" id="numberofTeams"
-                    class="border border-gray-300 text-gray-900 rounded p-2 w-full" required>
-            </div>
-        
-            <div class="mb-4">
-                <label for="playersPerTeam" class="block mb-2">Number of Players:</label>
-                <input type="number" name="numberofplayers" id="numberofplayers"
-                    class="border border-gray-300 text-gray-900 rounded p-2 w-full" required>
-            </div>
-        
-            <div class="mb-4">
-                <label for="playerNames" class="block mb-2">Player Names (separated by commas):</label>
-                <input type="text" name="playerNames" id="playerNames"
-                    class="border border-gray-300 text-gray-900 rounded p-2 w-full" required>
-            </div>
-        
-            <div class="mb-4">
-                <label for="time" class="block mb-2">Date and Time of the Sport:</label>
-                <input type="datetime-local" name="time" id="time"
-                    class="border border-gray-300 text-gray-900 rounded p-2 w-full" required>
-            </div>
-        
-            <div class="flex-none">
-                <button type="submit" class="bg-blue-600 text-white px-5 py-1.5 rounded font-medium mb-2">Create</button>
-            </div>
-        </div>
-        </form>
-            <% if (messages && messages.error && messages.error.length> 0) { %>
-                <% messages.error.forEach(function(error) { %>
-                    <li>
-                        <%= error %>
-                    </li>
-                    <% }); %>
-                        <% } %>
-    </div>
-</body>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <div class="mb-4">
+            <label for="venue" class="block mb-2">Venue:</label>
+            <input
+              type="text"
+              name="venue"
+              id="venue"
+              class="border border-gray-300 text-gray-900 rounded p-2 w-full bg-gray-700 focus:outline-none focus:border-blue-500"
+              required />
+          </div>
 
+          <div class="mb-4">
+            <label for="numberOfTeams" class="block mb-2">Number of Teams:</label>
+            <input
+              type="number"
+              name="numberofTeams"
+              id="numberofTeams"
+              class="border border-gray-300 text-gray-900 rounded p-2 w-full bg-gray-700 focus:outline-none focus:border-blue-500"
+              required />
+          </div>
+
+          <div class="mb-4">
+            <label for="time" class="block mb-2">Date and Time of the Sport:</label>
+            <input
+              type="datetime-local"
+              name="time"
+              id="time"
+              class="border border-gray-300 text-white-900 rounded p-2 w-full bg-gray-700 focus:outline-none focus:border-blue-500"
+              required />
+          </div>
+          <input type="hidden" name="sport_name" value="{{ sport_name }}" />
+
+          <div class="flex-none">
+            <button
+              type="submit"
+              class="bg-blue-600 text-white px-5 py-2 rounded font-medium mb-2 hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
+              Create
+            </button>
+          </div>
+        </div>
+      </form>
+      <div class="px-10 py-8 rounded-lg bg-gray-700 mt-6">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          <strong>Message:</strong> {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </body>
 </html>

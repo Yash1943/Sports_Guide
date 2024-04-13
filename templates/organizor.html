@@ -76,7 +76,7 @@
               <tr class="border-b">
                 <td class="py-2 px-4">{{ sport.id }}</td>
                 <td class="py-2 px-4 hover:underline">
-                  <a href="{% url 'createsession' sport.id %}">{{ sport.sport_name }}</a>
+                 <a href="{% url 'createsession' sport.id sport.sport_name %}" class="text-white hover:underline">{{ sport.sport_name }}</a>
                 </td>
                 <td class="py-2 px-1">
                   <form action="{% url 'delete_sport' sport.id %}" method="post">

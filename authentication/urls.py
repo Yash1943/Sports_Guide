@@ -20,5 +20,8 @@ urlpatterns = [
     path('signin/', views.signin, name='signin'),
     path('get_sports', views.get_sports, name='get_sports'),
     path('delete_sport/<int:id>/', delete_sport, name='delete_sport'),
-    path('createsession/<int:sport_id>/', views.recommendation_page, name='createsession'),
+    path('createsession/<int:sport_id>/<str:sport_name>/', views.createsession_page, name='createsession'),
+    path('create-session/', views.create_session, name='create_session'), 
+    path('recommendation/<str:sport_name>/<int:session_id>/', views.recommendation, name='recommendation'),
+    
 ]

@@ -17,6 +17,10 @@ from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from .models import Sport
 from .forms import SportForm 
+from .models import Session
+# from .forms import SessionForm
+from django.utils import timezone
+from django.shortcuts import get_object_or_404
 # Create your views here.
 def home(request):
     return render(request, "authentication/index.html")
@@ -32,9 +36,9 @@ def admin1(request):
 def organizor(request):
      csports = Sport.objects.all()
      return render(request, 'organizor.html', {'csports': csports})
-@login_required
-def mysession(request):
-    return render(request, "mysession.html")
+# @login_required
+# def mysession(request):
+#     return render(request, "mysession.html")
 @login_required
 def joinedsessions(request):
     return render(request, "joinedsessions.html")
@@ -200,6 +204,34 @@ def delete_sport(request, id):
         messages.error(request, "Invalid request method")
         return redirect('get_sports')
     
-def recommendation_page(request,sport_id):
+def createsession_page(request, sport_id,sport_name):
     # Logic to render the recommendation page
-    return render(request, 'createsession.html',  {'sport_id': sport_id})    
+    return render(request, 'createsession.html',  {'sport_id': sport_id, 'sport_name':sport_name})    
+
+def create_session(request):
+    if request.method == 'POST':
+        venue = request.POST.get('venue')
+        number_of_teams = request.POST.get('numberofTeams')
+        time = request.POST.get('time')
+        sport_name = request.POST.get('sport_name')
+
+        # Save session data to the database
+        session = Session.objects.create(
+            sport_name=sport_name,
+            venue=venue,
+            number_of_teams=number_of_teams,
+            time=time
+        )
+        return redirect('recommendation', sport_name=sport_name, session_id=session.id)
+
+    return render(request, 'createsession.html')
+
+def recommendation(request,sport_name,session_id):
+    # Retrieve all sessions from the database
+    sessions = Session.objects.all()
+
+    # Pass the retrieved sessions to the recommendation.html template
+    return render(request, 'recommendation.html', {'sessions': sessions})
+def mysession(request):
+    sessions=Session.objects.all()
+    return render(request,'mysession.html', {'sessions': sessions})

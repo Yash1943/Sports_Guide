@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Recommendations</title>
+</head>
+<body>
+    <h1>Session Recommendations</h1>
+    {% if sessions %}
+        <ul>
+            {% for session in sessions %}
+                <li>
+                    <p>Venue: {{ session.venue }}</p>
+                    <p>Number of Teams: {{ session.number_of_teams }}</p>
+                    <p>Time: {{ session.time }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No sessions found.</p>
+    {% endif %}
+</body>
+</html>
