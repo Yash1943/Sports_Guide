@@ -110,12 +110,18 @@
         <h2 class="text-2xl text-red-900 mb-4">List of Sports:</h2>
         <ul class="sports-list w-30">
             {% for sport in csports %}
-            <li class="text-white bg-cyan-500 shadow-lg shadow-cyan-500/50 px-5 py-1.5 rounded font-medium hover:underline m-2">{{ sport.sport_name }}</li>
+             <li class="text-white bg-cyan-500 shadow-lg shadow-cyan-500/50 px-5 py-1.5 rounded font-medium hover:underline m-2">
+            <a href="{% url 'filtered_sessions' sport.id %}">{{ sport.sport_name }}</a>
+        </li>
             {% endfor %}
         </ul>
         {% else %}
         <p>No sports created yet</p>
         {% endif %}
+
+         <div id="sessionList" class="mt-8">
+            <!-- Session list will be displayed here -->
+        </div>
     </div>
 </body>
 
@@ -124,5 +130,5 @@
         var dropdown = document.getElementById("accountDropdown");
         dropdown.classList.toggle("hidden");
     }
-</script>
+     </script>
 </html>

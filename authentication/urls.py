@@ -23,5 +23,6 @@ urlpatterns = [
     path('createsession/<int:sport_id>/<str:sport_name>/', views.createsession_page, name='createsession'),
     path('create-session/', views.create_session, name='create_session'), 
     path('recommendation/<str:sport_name>/<int:session_id>/', views.recommendation, name='recommendation'),
+    path('filtered_sessions/<int:sport_id>/', views.filtered_sessions, name='filtered_sessions'),
     
 ]

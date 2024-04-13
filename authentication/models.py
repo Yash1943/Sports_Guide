@@ -13,6 +13,3 @@ class Session(models.Model):
     venue = models.CharField(max_length=100)
     number_of_teams = models.IntegerField()
     time = models.DateTimeField()
-
-    def __str__(self):
-        return f"{self.sport.name} Session"

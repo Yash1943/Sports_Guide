@@ -6,39 +6,36 @@
     <title>Session Recommendations</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body class="bg-gray-100">
+
+  <body class="bg-gray-800">
     <div class="container mx-auto px-4 py-8">
-      <div class="flex items-center justify-between mb-4">
-        <a href="/player" class="text-gray-800 hover:text-blue-600">Back</a>
+      <div class="flex justify-between items-center mb-8">
+        <a href="/player" class="text-gray-200 hover:text-blue-600 font-bold text-lg"
+          >Back to Player Page</a
+        >
         <a
           href="/signout"
-          class="bg-blue-500 text-white px-4 py-2 rounded font-medium shadow-md hover:bg-blue-600"
+          class="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-blue-600"
           >Sign Out</a
         >
       </div>
-      <div class="bg-white rounded-lg shadow-lg px-8 py-6">
-        <!-- Session Recommendations -->
-        <h1 class="text-2xl font-bold mb-4">Session Recommendations</h1>
-        <div>
-          {% if sessions %}
-          <ul>
-            {% for session in sessions %}
-            <li class="mb-4">
-              <div class="bg-white rounded-lg shadow px-8 py-6">
-                <p class="font-bold text-gray-800">Sports Name: {{ session.sport_name }}</p>
-                <p class="font-bold text-gray-800">Venue: {{ session.venue }}</p>
-                <p class="font-bold text-gray-800">
-                  Number of Teams: {{ session.number_of_teams }}
-                </p>
-                <p class="font-bold text-gray-800">Time: {{ session.time }}</p>
-              </div>
-            </li>
-            {% endfor %}
-          </ul>
-          {% else %}
-          <p class="text-gray-800">No sessions found.</p>
-          {% endif %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% if sessions %} {% for session in sessions %}
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-lg font-semibold mb-4">{{ session.sport_name }}</h2>
+          <p class="text-gray-700 mb-2">
+            <span class="font-semibold">Venue:</span> {{ session.venue }}
+          </p>
+          <p class="text-gray-700 mb-2">
+            <span class="font-semibold">Number of Teams:</span> {{ session.number_of_teams }}
+          </p>
+          <p class="text-gray-700 mb-2">
+            <span class="font-semibold">Time:</span> {{ session.time }}
+          </p>
         </div>
+        {% endfor %} {% else %}
+        <p class="text-gray-800">No sessions found.</p>
+        {% endif %}
       </div>
     </div>
   </body>

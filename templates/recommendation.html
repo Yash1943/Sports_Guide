@@ -1,24 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Session Recommendations</title>
-</head>
-<body>
-    <h1>Session Recommendations</h1>
-    {% if sessions %}
-        <ul>
-            {% for session in sessions %}
-                <li>
-                    <p>Venue: {{ session.venue }}</p>
-                    <p>Number of Teams: {{ session.number_of_teams }}</p>
-                    <p>Time: {{ session.time }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No sessions found.</p>
-    {% endif %}
-</body>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-gray-800">
+    <div class="container mx-auto px-4 py-8">
+      <div class="flex justify-between items-center mb-8">
+        <a href="/player" class="text-gray-200 hover:text-blue-600 font-bold text-lg"
+          >Back to Player Page</a
+        >
+        <a
+          href="/signout"
+          class="bg-blue-500 text-white px-6 py-3 rounded-full font-semibold shadow-md hover:bg-blue-600"
+          >Sign Out</a
+        >
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% if sessions %} {% for session in sessions %}
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-lg font-semibold mb-4">{{ session.sport_name }}</h2>
+          <p class="text-gray-700 mb-2">
+            <span class="font-semibold">Venue:</span> {{ session.venue }}
+          </p>
+          <p class="text-gray-700 mb-2">
+            <span class="font-semibold">Number of Teams:</span> {{ session.number_of_teams }}
+          </p>
+          <p class="text-gray-700 mb-2">
+            <span class="font-semibold">Time:</span> {{ session.time }}
+          </p>
+        </div>
+        {% endfor %} {% else %}
+        <p class="text-gray-800">No sessions found.</p>
+        {% endif %}
+      </div>
+    </div>
+  </body>
 </html>

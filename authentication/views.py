@@ -27,7 +27,8 @@ def home(request):
 @login_required
 def player(request):
       csports = Sport.objects.all()
-      return render(request, 'Player.html', {'csports': csports})
+      sessions = Session.objects.all()
+      return render(request, 'Player.html', {'csports': csports , 'sessions': sessions})
 
 @login_required
 def admin1(request):
@@ -235,3 +236,12 @@ def recommendation(request,sport_name,session_id):
 def mysession(request):
     sessions=Session.objects.all()
     return render(request,'mysession.html', {'sessions': sessions})
+
+
+def filtered_sessions(request, sport_id):
+    try:
+        sport = Sport.objects.get(id=sport_id)
+        sessions = Session.objects.filter(sport_name=sport.sport_name)
+        return render(request, 'filtered_sessions.html', {'sessions': sessions})
+    except Sport.DoesNotExist:
+        return render(request, 'filtered_sessions.html', {'sessions': None})
