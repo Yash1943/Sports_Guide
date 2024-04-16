@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team Selection</title>
+  </head>
+  <body>
+    <h1>Team Selection</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% if session %}
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-lg font-semibold mb-4">{{ session.sport_name }}</h2>
+        <!-- Display other details for the selected session -->
+        <p class="text-gray-700 mb-2">
+          <span class="font-semibold">Venue:</span> {{ session.venue }}
+        </p>
+        <p class="text-gray-700 mb-2">
+          <span class="font-semibold">Number of Teams:</span> {{ session.number_of_teams }}
+        </p>
+        <p class="text-gray-700 mb-2">
+          <span class="font-semibold">Time:</span> {{ session.time }}
+        </p>
+        <!-- Add other details as needed -->
+        <form>
+          {% for i in session.team_range %}
+          <label for="team{{ i }}PlayerType">Select player type for Team {{ i }}:</label>
+          <select id="team{{ i }}PlayerType" name="team{{ i }}PlayerType">
+            <option value="batting">Batting</option>
+            <option value="bowling">Bowling</option>
+            <option value="allrounder">All-Rounder</option>
+          </select>
+          <button>submit</button>
+          <br />
+          {% endfor %}
+        </form>
+      </div>
+      {% else %}
+      <p>No session found.</p>
+      {% endif %}
+    </div>
+  </body>
+</html>

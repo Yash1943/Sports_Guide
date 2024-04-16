@@ -230,6 +230,7 @@ def create_session(request):
 def recommendation(request,sport_name,session_id):
     # Retrieve all sessions from the database
     sessions = Session.objects.all()
+    # session_teams_range = range(1, sessions.number_of_teams + 1)
 
     # Pass the retrieved sessions to the recommendation.html template
     return render(request, 'recommendation.html', {'sessions': sessions})
@@ -245,3 +246,19 @@ def filtered_sessions(request, sport_id):
         return render(request, 'filtered_sessions.html', {'sessions': sessions})
     except Sport.DoesNotExist:
         return render(request, 'filtered_sessions.html', {'sessions': None})
+
+import logging    
+logger = logging.getLogger(__name__)    
+    
+def choice(request, sport_id=None):
+    try:
+        if sport_id is not None:
+            session = get_object_or_404(Session, pk=sport_id)
+            session.team_range = range(1, session.number_of_teams + 1)
+            return render(request, "choice.html", {"session": session})
+        else:
+            logger.error("No sport_id provided in URL")
+            return render(request, "choice.html", {"session": None})
+    except Exception as e:
+        logger.error(f"Error retrieving session: {e}")
+        return render(request, "choice.html", {"session": None})
