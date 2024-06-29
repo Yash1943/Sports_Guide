@@ -26,67 +26,74 @@
 
     <div class="container mx-auto px-4 py-8">
       <h1 class="text-3xl font-bold mb-4">Cancelled Sessions</h1>
-      <% if (data.length===0) { %>
-      <p class="text-gray-500 text-center">No sessions have been cancelled.</p>
-      <% } else { %> <% let groupedSessions={}; %> <% data.forEach(session=> { %> <% const
-      sportName=session.sport_name; %> <% if (!groupedSessions[sportName]) { %> <%
-      groupedSessions[sportName]=[]; %> <% } %> <% groupedSessions[sportName].push(session); %> <%
-      }); %> <% for (const sportName in groupedSessions) { %> <% const
-      sessions=groupedSessions[sportName]; %> <% const cancelledSessions=sessions.filter(session=>
-      session.cancel_status); %> <% if (cancelledSessions.length> 0) { %>
-      <h1 class="text-2xl font-bold mb-4"><%= sportName %></h1>
-      <div class="overflow-x-auto">
-        <table class="w-full table-auto mt-4">
-          <thead>
-            <tr>
-              <th class="px-4 py-2">ID</th>
-              <th class="px-4 py-2">Venue</th>
-              <th class="px-4 py-2">Number of Teams</th>
-              <th class="px-4 py-2">Number of Players</th>
-              <th class="px-4 py-2">Time</th>
-              <th class="px-4 py-2">Organizer</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% cancelledSessions.forEach(session=> { %>
-            <tr class="bg-red-100">
-              <td class="px-4 py-2"><%= session.id %></td>
-              <td class="px-4 py-2"><%= session.venue %></td>
-              <td class="px-4 py-2"><%= session.teamcount %></td>
-              <td class="px-4 py-2"><%= session.playercount %></td>
-              <td class="px-4 py-2">
-                <%= session.time.toLocaleString('en-US', { weekday: 'long' , month: 'long' , day:
-                'numeric' , year: 'numeric' , hour: 'numeric' , minute: 'numeric' , hour12: true })
-                %>
-              </td>
-              <td class="px-4 py-2">
-                <% const organizer=userIdUsernameArray.find(user=> user.userId === session.userId);
-                %> <%= organizer ? organizer.username : 'Unknown Organizer' %>
-              </td>
-            </tr>
-            <td colspan="7" class="td">
-              <div class="flex">
-                <% const playerNames=session.playernames.split(","); %>
-                <h3
-                  class="text-white bg-cyan-500 shadow-lg shadow-cyan-500/50 px-5 py-1 rounded font-medium">
-                  PLAYERNAMES
-                </h3>
-                &nbsp; <% playerNames.forEach(name=> { %>
-                <span> <%= name.trim() %>, </span>
-                <% }); %>
-              </div>
-            </td>
-            <% if (session.cancel_status) { %>
-            <tr>
-              <td colspan="8" class="text-sm italic text-red-900">
-                Reason: <%= session.cancelled_reason %>
-              </td>
-            </tr>
-            <% } %> <% }); %>
-          </tbody>
-        </table>
-      </div>
-      <% } %> <% } %> <% } %>
+      <% if (data.length === 0) { %>
+        <p class="text-gray-500 text-center">No sessions have been cancelled.</p>
+      <% } else { %>
+        <% let groupedSessions = {}; %>
+        <% data.forEach(session => { %>
+          <% const sportName = session.sport_name; %>
+          <% if (!groupedSessions[sportName]) { %>
+            <% groupedSessions[sportName] = []; %>
+          <% } %>
+          <% groupedSessions[sportName].push(session); %>
+        <% }); %>
+        <% for (const sportName in groupedSessions) { %>
+          <% const sessions = groupedSessions[sportName]; %>
+          <% const cancelledSessions = sessions.filter(session => session.cancel_status); %>
+          <% if (cancelledSessions.length > 0) { %>
+            <h1 class="text-2xl font-bold mb-4"><%= sportName %></h1>
+            <div class="overflow-x-auto">
+              <table class="w-full table-auto mt-4">
+                <thead>
+                  <tr class="bg-gray-200">
+                    <th class="px-4 py-2">ID</th>
+                    <th class="px-4 py-2">Venue</th>
+                    <th class="px-4 py-2">Number of Teams</th>
+                    <th class="px-4 py-2">Number of Players</th>
+                    <th class="px-4 py-2">Time</th>
+                    <th class="px-4 py-2">Organizer</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% cancelledSessions.forEach(session => { %>
+                    <tr class="bg-red-100">
+                      <td class="px-4 py-2"><%= session.id %></td>
+                      <td class="px-4 py-2"><%= session.venue %></td>
+                      <td class="px-4 py-2"><%= session.teamcount %></td>
+                      <td class="px-4 py-2"><%= session.playercount %></td>
+                      <td class="px-4 py-2">
+                        <%= session.time.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true }) %>
+                      </td>
+                      <td class="px-4 py-2">
+                        <% const organizer = userIdUsernameArray.find(user => user.userId === session.userId); %>
+                        <%= organizer ? organizer.username : 'Unknown Organizer' %>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="6" class="px-4 py-2">
+                        <div class="flex flex-wrap">
+                          <span class="font-bold mr-2">Player Names:</span>
+                          <% const playerNames = session.playernames.split(","); %>
+                          <% playerNames.forEach(name => { %>
+                            <span class="inline-block bg-gray-200 px-2 py-1 rounded-lg mr-2"><%= name.trim() %></span>
+                          <% }); %>
+                        </div>
+                      </td>
+                    </tr>
+                    <% if (session.cancel_status) { %>
+                      <tr>
+                        <td colspan="6" class="px-4 py-2 text-sm italic text-red-900">
+                          Reason: <%= session.cancelled_reason %>
+                        </td>
+                      </tr>
+                    <% } %>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } %>
+        <% } %>
+      <% } %>
     </div>
   </body>
 </html>

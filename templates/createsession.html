@@ -6,62 +6,59 @@
     <title>Sports-Guide</title>
     <link rel="icon" href="/static/icon.png" type="image/x-icon" />
     <script src="https://cdn.tailwindcss.com"></script>
-    {% comment %} <link rel="stylesheet" href="/css/styles.css" /> {% endcomment %}
   </head>
-
-  <body class="bg-gray-900 text-white">
-    <div class="container mx-auto px-4">
-      <h1 class="text-left mb-4 text-3xl font-semibold">Create {{ sport_name }} new Session</h1>
-      <form action="{% url 'create_session' %}" method="post" class="max-w-md mx-auto">
+  <body class="bg-white text-gray-900">
+    <div class="container mx-auto px-4 py-12">
+      <h1 class="text-4xl font-bold mb-8 text-center">Create {{ sport_name }} New Session</h1>
+      <form
+        action="{% url 'create_session' %}"
+        method="post"
+        class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg border border-gray-300">
         {% csrf_token %}
-        <div class="py-3">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-          <div class="mb-4">
-            <label for="venue" class="block mb-2">Venue:</label>
-            <input
-              type="text"
-              name="venue"
-              id="venue"
-              class="border border-gray-300 text-gray-900 rounded p-2 w-full bg-gray-700 focus:outline-none focus:border-blue-500"
-              required />
-          </div>
-
-          <div class="mb-4">
-            <label for="numberOfTeams" class="block mb-2">Number of Teams:</label>
-            <input
-              type="number"
-              name="numberofTeams"
-              id="numberofTeams"
-              class="border border-gray-300 text-gray-900 rounded p-2 w-full bg-gray-700 focus:outline-none focus:border-blue-500"
-              required />
-          </div>
-
-          <div class="mb-4">
-            <label for="time" class="block mb-2">Date and Time of the Sport:</label>
-            <input
-              type="datetime-local"
-              name="time"
-              id="time"
-              class="border border-gray-300 text-white-900 rounded p-2 w-full bg-gray-700 focus:outline-none focus:border-blue-500"
-              required />
-          </div>
-          <input type="hidden" name="sport_name" value="{{ sport_name }}" />
-
-          <div class="flex-none">
-            <button
-              type="submit"
-              class="bg-blue-600 text-white px-5 py-2 rounded font-medium mb-2 hover:bg-blue-700 focus:outline-none focus:bg-blue-700">
-              Create
-            </button>
-          </div>
+        <div class="mb-6">
+          <label for="venue" class="block mb-2 text-lg font-medium">Venue:</label>
+          <input
+            type="text"
+            name="venue"
+            id="venue"
+            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
+            required />
+        </div>
+        <div class="mb-6">
+          <label for="numberofTeams" class="block mb-2 text-lg font-medium">Number of Teams:</label>
+          <input
+            type="number"
+            name="numberofTeams"
+            id="numberofTeams"
+            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
+            required />
+        </div>
+        <div class="mb-6">
+          <label for="time" class="block mb-2 text-lg font-medium"
+            >Date and Time of the Sport:</label>
+          <input
+            type="datetime-local"
+            name="time"
+            id="time"
+            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
+            required />
+        </div>
+        <input type="hidden" name="sport_name" value="{{ sport_name }}" />
+        <div class="flex justify-center">
+          <button
+            type="submit"
+            class="bg-blue-600 text-white px-5 py-3 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:bg-blue-700 transition duration-150 ease-in-out">
+            Create
+          </button>
         </div>
       </form>
-      <div class="px-10 py-8 rounded-lg bg-gray-700 mt-6">
+      <div class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg mt-8 border border-gray-300">
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-          <strong>Message:</strong> {{ message }}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+        <div class="bg-gray-100 p-4 rounded mb-4 text-center">
+          <strong class="text-gray-900">Message:</strong>
+          <span class="text-gray-700">{{ message }}</span>
+          <button type="button" class="ml-4 text-red-500 hover:text-red-700 focus:outline-none">
+            &times;
           </button>
         </div>
         {% endfor %}

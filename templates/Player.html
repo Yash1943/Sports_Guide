@@ -1,134 +1,85 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/static/icon.png" type="image/x-icon">
-    <meta name="csrf-token" content="<%= csrfToken %>">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/static/icon.png" type="image/x-icon" />
+    <meta name="csrf-token" content="<%= csrfToken %>" />
     <title>Player</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- <link rel="stylesheet" href="/css/styles.css" /> -->
     <style>
-      /* Container styles */
+      /* Navbar styles */
       .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         background-color: #003366;
-        padding: 10px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
-
-      .navbar a {
-        color: white;
-        text-decoration: none;
-        font-size: 16px;
-      }
-
-      .navbar a:hover {
-        text-decoration: underline;
-      }
-
-      /* Dropdown styles */
       .dropdown-menu {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        width: 12rem;
-        background-color: white;
-        border: 1px solid #ccc;
-        border-radius: 0.25rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        z-index: 10;
         display: none;
       }
-
-      .dropdown-menu a {
+      .dropdown-menu.show {
         display: block;
-        padding: 0.5rem 1rem;
-        color: #333;
-        font-size: 14px;
-        text-decoration: none;
-      }
-
-      .dropdown-menu a:hover {
-        background-color: #f3f4f6;
       }
     </style>
-</head>
-
-<body class="bg-gray-900">
+  </head>
+  <body class="bg-white text-gray-800">
     <div class="container mx-auto p-8">
-        <nav class="navbar flex justify-between items-center p-4 bg-black-600 shadow">
-            <a href="/player" class="navbar-brand text-3xl font-bold text-gray-800">Sports-Guide</a>
-            <div class="navbar-links flex items-center space-x-4">
-                {% if user.is_staff %}
-                <a href="/organizor" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">Admin Page</a>
-                <a href="/mysession" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">My Sessions</a>
-                <a href="/joinedsessions" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">Joined Sessions</a>
-                <a href="/cancel_sessions" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">Cancelled Sessions</a>
-                {% else %}
-                <a href="/mysession" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">My Sessions</a>
-                <a href="/joinedsessions" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">Joined Sessions</a>
-                <a href="/cancel_sessions" class="text-sm text-gray-800 hover:text-gray-600 transition duration-300">Cancelled Sessions</a>
-                {% endif %}
-                <div class="relative">
+      <!-- Navbar -->
+      <nav class="navbar flex justify-between items-center p-4 shadow">
+        <a href="/player" class="navbar-brand text-3xl font-bold text-white">Sports Infrastructure Management</a>
+        <div class="navbar-links flex items-center space-x-4">
+          {% if user.is_staff %}
+          <a href="/organizor" class="text-sm text-white hover:text-gray-300 transition duration-300">Admin Page</a>
+          <a href="/mysession" class="text-sm text-white hover:text-gray-300 transition duration-300">My Sessions</a>
+          <a href="/joinedsessions" class="text-sm text-white hover:text-gray-300 transition duration-300">Joined Sessions</a>
+          <a href="/cancel_sessions" class="text-sm text-white hover:text-gray-300 transition duration-300">Cancelled Sessions</a>
+          {% else %}
+          <a href="/mysession" class="text-sm text-white hover:text-gray-300 transition duration-300">My Sessions</a>
+          <a href="/joinedsessions" class="text-sm text-white hover:text-gray-300 transition duration-300">Joined Sessions</a>
+          <a href="/cancel_sessions" class="text-sm text-white hover:text-gray-300 transition duration-300">Cancelled Sessions</a>
+          {% endif %}
+          <div class="relative">
             <!-- Account icon -->
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 cursor-pointer text-white-800"
+              class="h-6 w-6 cursor-pointer text-white"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
               onclick="toggleDropdown()">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16m-7 6h7"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
             <!-- Dropdown menu -->
             <div
               id="accountDropdown"
-              class="hidden absolute bg-gray-900 right-0 mt-2 w-48 rounded-md shadow-lg py-2 z-10">
-              <a
-                href="/signout"
-                class="block px-4 py-2 text-sm  hover:bg-gray-100 hover:text-gray-900"
-                >Sign Out</a
-              >
-              <a
-                href="/change_password"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                >Change Password</a
-              >
-                    </div>
-                </div>
+              class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-10">
+              <a href="/signout" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900">Sign Out</a>
+              <a href="/change_password" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900">Change Password</a>
             </div>
-        </nav>
-        {% comment %} <div class="w-30px "> {% endcomment %}
-        {% if csports %}
-        <h2 class="text-2xl text-red-900 mb-4">List of Sports:</h2>
-        <ul class="sports-list w-30">
-            {% for sport in csports %}
-             <li class="text-white bg-cyan-500 shadow-lg shadow-cyan-500/50 px-5 py-1.5 rounded font-medium hover:underline m-2">
-            <a href="{% url 'filtered_sessions' sport.id %}">{{ sport.sport_name }}</a>
-        </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p>No sports created yet</p>
-        {% endif %}
-
-         <div id="sessionList" class="mt-8">
-            <!-- Session list will be displayed here -->
+          </div>
         </div>
+      </nav>
+      <!-- Sports List -->
+      {% if csports %}
+      <h2 class="text-2xl text-gray-800 mt-8 mb-4">List of Sports:</h2>
+      <ul class="sports-list space-y-2">
+        {% for sport in csports %}
+        <li class="bg-cyan-500 text-white shadow-lg px-5 py-2 rounded hover:bg-cyan-600">
+          <a href="{% url 'filtered_sessions' sport.id %}">{{ sport.sport_name }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="text-gray-600 mt-8">No sports created yet</p>
+      {% endif %}
+      <!-- Session List -->
+      <div id="sessionList" class="mt-8">
+        <!-- Session list will be displayed here -->
+      </div>
     </div>
-</body>
-
-<script>
-    function toggleDropdown() {
+    <script>
+      function toggleDropdown() {
         var dropdown = document.getElementById("accountDropdown");
-        dropdown.classList.toggle("hidden");
-    }
-     </script>
+        dropdown.classList.toggle("show");
+      }
+    </script>
+  </body>
 </html>

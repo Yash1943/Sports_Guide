@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/static/icon.png" type="image/x-icon">
+    <link rel="icon" href="/static/icon.png" type="image/x-icon" />
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Sign In</title>
   </head>
   <body class="bg-white text-gray-800">
     <div class="container mx-auto flex justify-center items-center h-screen">
-      <a href="/" class="absolute top-0 left-0 ml-4 mt-4 text-white bg-gray-600 hover:bg-gray-800 rounded p-3 m-2">&larr; Back</a>
+      <a
+        href="/"
+        class="absolute top-0 left-0 ml-4 mt-4 text-white bg-gray-600 hover:bg-gray-800 rounded p-3 m-2"
+        >&larr; Back</a
+      >
       <div class="bg-gray-100 px-10 py-8 rounded-lg shadow-lg w-full max-w-md">
         <!-- Display messages -->
         {% for message in messages %}
@@ -55,7 +59,8 @@
         </form>
         <!-- Signup Link -->
         <div class="text-center">
-          <p class="text-sm">Don't have an account? 
+          <p class="text-sm">
+            Don't have an account?
             <a href="/signup" class="underline text-blue-500 hover:text-blue-700">Sign Up</a>
           </p>
         </div>

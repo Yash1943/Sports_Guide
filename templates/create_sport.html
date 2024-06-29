@@ -1,24 +1,41 @@
-<h1>created</h1>
-<div>
-  <h2>Created Sports</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for sport in sports_list %}
-      <tr>
-        <td>{{ sport.id }}</td>
-        <td>{{ sport.sport_name }}</td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="2">No sports created yet</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Created Sports</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet" />
+  </head>
+  <body class="bg-white text-gray-800">
+    <div class="container mx-auto py-12">
+      <h1 class="text-4xl font-bold mb-8 text-center">Created Sports</h1>
+      <div class="bg-gray-100 p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-semibold mb-4">Sports List</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white rounded-md overflow-hidden">
+            <thead class="bg-gray-200 text-gray-600 uppercase text-sm">
+              <tr>
+                <th class="py-3 px-6 text-left">ID</th>
+                <th class="py-3 px-6 text-left">Name</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-700 text-sm">
+              {% for sport in sports_list %}
+              <tr class="border-b border-gray-200 hover:bg-gray-100">
+                <td class="py-3 px-6">{{ sport.id }}</td>
+                <td class="py-3 px-6">{{ sport.sport_name }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="2" class="py-3 px-6 text-center">No sports created yet</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
