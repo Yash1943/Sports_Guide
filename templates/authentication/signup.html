@@ -11,74 +11,83 @@
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet" />
   </head>
-  <body class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white">
+  <body class="bg-white text-gray-800">
     <div class="container mx-auto flex justify-center items-center h-screen">
       <a
         href="/"
         class="absolute top-0 left-0 ml-4 mt-4 text-white bg-gray-600 hover:bg-gray-800 rounded p-3 m-2"
         >&larr; Back</a
       >
-      <div class="bg-gray-800 px-10 py-8 rounded-lg shadow-lg">
-        <h1 class="text-3xl text-center font-semibold mb-4">Welcome to Sport-Guide</h1>
+      <div class="bg-gray-100 px-10 py-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-3xl text-center font-semibold mb-4">
+          Welcome to Sports Infrastructure Management
+        </h1>
         <h3 class="text-xl text-center mb-4">Create your account!</h3>
-        <form method="post" action="/signup" class="m-5 p-4 space-x-2 space-y-3">
+        <form method="post" action="/signup" class="space-y-4">
           {% csrf_token %}
-          <label for="username" class="block text-white mb-2">Username</label>
-          <input
-            type="text"
-            class="w-full px-3 py-2 rounded-md text-black focus:text-white focus:outline-none focus:bg-gray-700 bg-white"
-            id="username"
-            name="username"
-            placeholder="Create A Username (use only letters and numbers)"
-            required />
-          <label for="fname" class="block text-white mb-2">First Name</label>
-          <input
-            type="text"
-            class="w-full px-3 py-2 rounded-md text-black focus:text-white focus:outline-none focus:bg-gray-700 bg-white"
-            id="fname"
-            name="fname"
-            placeholder="Enter Your First Name"
-            required />
-          <label for="lname" class="block text-white mb-2">Last Name</label>
-          <input
-            type="text"
-            class="w-full px-3 py-2 rounded-md text-black focus:text-white focus:outline-none focus:bg-gray-700 bg-white"
-            id="lname"
-            name="lname"
-            placeholder="Enter Your Last Name"
-            required />
-          <label for="lname" class="block text-white mb-2">Role</label>
-          <select id="cars" name="text-black">
-            <option value="volvo">Manager</option>
-            <option value="saab">User</option>
-          </select>
-          <label for="email" class="block text-white mb-2">Email</label>
-          <input
-            type="email"
-            class="w-full px-3 py-2 rounded-md text-black focus:text-white focus:outline-none focus:bg-gray-700 bg-white"
-            id="email"
-            name="email"
-            placeholder="Enter Your Email Address"
-            required />
-          <label for="pass1" class="block text-white mb-2">Password</label>
-          <input
-            type="password"
-            class="w-full px-3 py-2 rounded-md text-black focus:text-white focus:outline-none focus:bg-gray-700 bg-white"
-            id="pass1"
-            name="pass1"
-            placeholder="Create Your Password"
-            required />
-          <label for="pass2" class="block text-white mb-2">Confirm Password</label>
-          <input
-            type="password"
-            class="w-full px-3 py-2 rounded-md text-black focus:text-white focus:outline-none focus:bg-gray-700 bg-white"
-            id="pass2"
-            name="pass2"
-            placeholder="Confirm Your Password"
-            required />
+          <div>
+            <label for="username" class="block text-sm font-medium mb-1">Username</label>
+            <input
+              type="text"
+              class="w-full px-3 py-2 rounded-md text-gray-800 focus:text-gray-800 focus:outline-none focus:bg-gray-200 bg-white"
+              id="username"
+              name="username"
+              placeholder="Create A Username (use only letters and numbers)"
+              required />
+          </div>
+          <div>
+            <label for="fname" class="block text-sm font-medium mb-1">First Name</label>
+            <input
+              type="text"
+              class="w-full px-3 py-2 rounded-md text-gray-800 focus:text-gray-800 focus:outline-none focus:bg-gray-200 bg-white"
+              id="fname"
+              name="fname"
+              placeholder="Enter Your First Name"
+              required />
+          </div>
+          <div>
+            <label for="lname" class="block text-sm font-medium mb-1">Last Name</label>
+            <input
+              type="text"
+              class="w-full px-3 py-2 rounded-md text-gray-800 focus:text-gray-800 focus:outline-none focus:bg-gray-200 bg-white"
+              id="lname"
+              name="lname"
+              placeholder="Enter Your Last Name"
+              required />
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium mb-1">Email</label>
+            <input
+              type="email"
+              class="w-full px-3 py-2 rounded-md text-gray-800 focus:text-gray-800 focus:outline-none focus:bg-gray-200 bg-white"
+              id="email"
+              name="email"
+              placeholder="Enter Your Email Address"
+              required />
+          </div>
+          <div>
+            <label for="pass1" class="block text-sm font-medium mb-1">Password</label>
+            <input
+              type="password"
+              class="w-full px-3 py-2 rounded-md text-gray-800 focus:text-gray-800 focus:outline-none focus:bg-gray-200 bg-white"
+              id="pass1"
+              name="pass1"
+              placeholder="Create Your Password"
+              required />
+          </div>
+          <div>
+            <label for="pass2" class="block text-sm font-medium mb-1">Confirm Password</label>
+            <input
+              type="password"
+              class="w-full px-3 py-2 rounded-md text-gray-800 focus:text-gray-800 focus:outline-none focus:bg-gray-200 bg-white"
+              id="pass2"
+              name="pass2"
+              placeholder="Confirm Your Password"
+              required />
+          </div>
           <button
             type="submit"
-            class="w-full bg-green-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-600">
+            class="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
             Sign Up
           </button>
         </form>
