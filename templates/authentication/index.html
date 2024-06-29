@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sports Infrastructure Management</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet" />
+    <style>
+      .container {
+        @apply flex flex-col items-center justify-center h-screen;
+      }
+
+      .your {
+        @apply text-black text-3xl font-bold rotate-90;
+      }
+
+      .manage {
+        @apply text-black text-4xl font-bold;
+      }
+
+      .infrastructure {
+        @apply text-black text-4xl font-bold;
+      }
+
+      .sports {
+        @apply text-7xl font-bold text-transparent bg-gradient-to-r from-purple-500 to-pink-500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mx-auto py-4">
+      <!-- Header -->
+      <header class="bg-gray-100 py-4">
+        <div class="container mx-auto flex justify-between items-center">
+          <h1 class="text-2xl font-bold text-gray-800">
+            <a href="/">Sports Infrastructure Management</a>
+          </h1>
+          <nav>
+            <ul class="flex space-x-6">
+              <li><a href="#" class="text-gray-600 hover:text-gray-800">Home</a></li>
+              <li><a href="#" class="text-gray-600 hover:text-gray-800">Sports</a></li>
+              <li><a href="#" class="text-gray-600 hover:text-gray-800">About</a></li>
+              <li><a href="#" class="text-gray-600 hover:text-gray-800">Contact</a></li>
+              <li>
+                <a
+                  href="#"
+                  class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md"
+                  >Login</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
+                  >Sign up</a
+                >
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+
+      <!-- Hero Section -->
+      <div class="container mx-auto py-16 m-20">
+        <div
+          class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12">
+          <div class="container text-center text-5xl md:text-left w-1/2 font-bold">
+            <div class="text">Your</div>
+            <div class="manage">Manage</div>
+            <div class="infrastructure">Infrastructure</div>
+            <div class="sports">Sports</div>
+          </div>
+          <div>
+            <img
+              class="box-content h-80 w-80 p-4 border--backdrop-hue-rotate-15 rounded-3xl"
+              src="/static/sports-infrastructure-management-.png" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="bg-gray-900 py-4 text-center text-white">
+        <p>&copy; 2023 Sports Infrastructure Management</p>
+      </footer>
+    </div>
+  </body>
+</html>

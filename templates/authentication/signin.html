@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/static/icon.png" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Sign In</title>
+  </head>
+  <body class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white">
+    <div class="container mx-auto flex justify-center items-center h-screen">
+      <a href="/" class="absolute top-0 left-0 ml-4 mt-4 text-white bg-gray-600 hover:bg-gray-800 rounded p-3 m-2">&larr; Back</a>
+      <div class="bg-gray-800 px-10 py-8 rounded-lg shadow-lg">
+             {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <strong>Message:</strong> {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+        <h1 class="text-3xl">Welcome to Sport-Guide</h1>
+        <h3 class="m-5 p-2">Log In to your account!</h3>
+        <form method="post" action="/signin" class="mb-2 ml-5 p-2">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+             class="w-full px-3 py-2 rounded-md text-black focus:text-white focus:outline-none focus:bg-gray-700"
+              id="username"
+              name="username"
+              placeholder="Enter Your Username"
+              required />
+          </div>
+          <div class="form-group mt-4">
+            <label for="pass1">Password</label>
+            <input
+              type="password"
+              class="w-full px-3 py-2 rounded-md text-black focus:text-white focus:outline-none focus:bg-gray-700"
+              id="pass1"
+              name="pass1"
+              placeholder="Enter Your Password"
+              required />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-green-500 text-white font-semibold m-3 p-2 mr-4 rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-600">
+            Log In
+          </button>
+           <div class="ml-3 mt-5">
+            Click here for
+            <a
+              href="/signup"
+              class="w-full flex-none text-sm font-medium text-slate-500 mt-5 ml-2 underline"
+              style="color: #8cffdb"
+              >Signup</a
+            >
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
