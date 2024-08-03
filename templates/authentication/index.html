@@ -1,89 +1,296 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sports Infrastructure Management</title>
+    <title>Sports-Guide</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet" />
+        href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        rel="stylesheet"
+    />
     <style>
-      .container {
-        @apply flex flex-col items-center justify-center h-screen;
-      }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
 
-      .your {
-        @apply text-black text-3xl font-bold rotate-90;
-      }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50%);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-      .manage {
-        @apply text-black text-4xl font-bold;
-      }
+        .slide-in {
+            opacity: 0;
+            transform: translateX(-50%);
+            animation: slideIn 1s ease-out forwards;
+        }
 
-      .infrastructure {
-        @apply text-black text-4xl font-bold;
-      }
+        .slide-up {
+            opacity: 0;
+            transform: translateY(50%);
+            animation: slideUp 1s ease-out forwards;
+        }
 
-      .sports {
-        @apply text-7xl font-bold text-transparent bg-gradient-to-r from-purple-500 to-pink-500;
-      }
+        .slide-in:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .slide-in:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .slide-in:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        .slide-in:nth-child(4) {
+            animation-delay: 1.5s;
+        }
+
+        .slide-in-image {
+            opacity: 0;
+            transform: translateX(-50%);
+            animation: slideIn 1s ease-out forwards;
+            animation-delay: 2s;
+        }
+
+        .hover-effect:hover {
+            background-color: #3b82f6;
+            color: white;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .hover-effect-blue:hover {
+            background-color: #2563eb;
+            color: white;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .responsive-text {
+            font-size: 1.25rem;
+        }
+
+        .responsive-header {
+            padding: 1rem;
+            background-color: #f3f4f6;
+        }
+
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .menu-mobile {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 75%;
+            height: 100%;
+            background-color: #f3f4f6;
+            padding: 1rem;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+            z-index: 20;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .menu-mobile.open {
+            display: flex;
+            flex-direction: column;
+            transform: translateX(0);
+        }
+
+        .menu-mobile ul {
+            flex-direction: column;
+            display: flex;
+            height: 100%;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .menu-mobile ul li {
+            margin: 0.5rem 0;
+        }
     </style>
-  </head>
-  <body>
-    <div class="container mx-auto py-4">
-      <!-- Header -->
-      <header class="bg-gray-100 py-4">
-        <div class="container mx-auto flex justify-between items-center">
-          <h1 class="text-2xl font-bold text-gray-800">
-            <a href="/">Sports Infrastructure Management</a>
-          </h1>
-          <nav>
-            <ul class="flex space-x-6">
-              <li><a href="#" class="text-gray-600 hover:text-gray-800">Home</a></li>
-              <li><a href="#" class="text-gray-600 hover:text-gray-800">Sports</a></li>
-              <li><a href="#" class="text-gray-600 hover:text-gray-800">About</a></li>
-              <li><a href="#" class="text-gray-600 hover:text-gray-800">Contact</a></li>
-              <li>
-                <a
-              href="/signup"
-                  class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md"
-                  >Sign Up</a
+</head>
+<body>
+    <div class="container mx-auto py-4 px-4">
+        <!-- Header -->
+        <header class="bg-gray-100 py-4 responsive-header">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-800 mx-4">
+                    <a href="/">Sports-Guide</a>
+                </h1>
+                <button
+                    id="menu-toggle"
+                    class="md:hidden bg-gray-200 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
-              </li>
-              <li>
-                <a
-              href="/signin"
-                  class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
-                  >Sign In</a
+                    <svg
+                        class="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7"
+                        />
+                    </svg>
+                </button>
+                <nav id="menu" class="hidden md:flex md:items-center md:space-x-6">
+                    <ul
+                        class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-center md:text-left"
+                    >
+                        <li>
+                            <a href="#" class="text-gray-600 hover:text-gray-800">Home</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-gray-600 hover:text-gray-800">Sports</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-gray-600 hover:text-gray-800">About</a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-gray-600 hover:text-gray-800">Contact</a>
+                        </li>
+                        <li>
+                            <a
+                                href="/signup"
+                                class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md hover-effect"
+                            >Sign Up</a>
+                        </li>
+                        <li>
+                            <a
+                                href="/signin"
+                                class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover-effect-blue"
+                            >Sign In</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <div class="container mx-auto py-16 px-4 md:px-20">
+            <div
+                class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12"
+            >
+                <div
+                    class="text-center md:text-left w-full md:w-1/2 font-bold responsive-text"
                 >
-              </li>
-            </ul>
-          </nav>
+                    <h1 class="slide-in text-3xl md:text-5xl">Welcome to</h1>
+                    <div class="slide-in text-2xl md:text-4xl">Sports-Guide</div>
+                    <div class="slide-in text-lg md:text-2xl my-3">
+                        Build strong teams, manage sessions, and collaborate online!
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <img
+                        class="w-full md:w-auto h-auto max-w-sm mx-auto md:mx-0 slide-in-image"
+                        src="/static/sports-infrastructure-management-.png"
+                        alt="Sports Guide Image"
+                    />
+                </div>
+            </div>
         </div>
-      </header>
 
-      <!-- Hero Section -->
-      <div class="container mx-auto py-16 m-20">
-        <div
-          class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12">
-          <div class="container text-center text-5xl md:text-left w-1/2 font-bold">
-            <div class="text">Your</div>
-            <div class="manage">Manage</div>
-            <div class="infrastructure">Infrastructure</div>
-            <div class="sports">Sports</div>
-          </div>
-          <div>
-            <img
-              class="box-content h-80 w-80 p-4 border--backdrop-hue-rotate-15 rounded-3xl"
-              src="/static/sports-infrastructure-management-.png" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <footer class="bg-gray-900 py-4 text-center text-white">
-        <p>&copy; 2023 Sports Infrastructure Management</p>
-      </footer>
+        <!-- Footer -->
+        <footer class="bg-gray-900 py-4 text-center text-white">
+            <p>&copy; 2024 Sports-Guide</p>
+            <div class="mt-4">
+                <a href="#" class="inline-block mx-2 hover:text-gray-400">Privacy Policy</a>
+                <a href="#" class="inline-block mx-2 hover:text-gray-400">Terms of Service</a>
+                <a href="#" class="inline-block mx-2 hover:text-gray-400">Contact Us</a>
+            </div>
+        </footer>
     </div>
-  </body>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="menu-overlay" class="menu-overlay"></div>
+
+    <!-- Mobile Menu -->
+    <nav id="mobile-menu" class="menu-mobile">
+        <button id="menu-close" class="absolute top-4 right-4 text-gray-800">
+            <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                />
+            </svg>
+        </button>
+        <ul class="flex flex-col space-y-4 mt-8">
+            <li>
+                <a href="#" class="text-gray-600 hover:text-gray-800">Home</a>
+            </li>
+            <li>
+                <a href="#" class="text-gray-600 hover:text-gray-800">Sports</a>
+            </li>
+            <li>
+                <a href="#" class="text-gray-600 hover:text-gray-800">About</a>
+            </li>
+            <li>
+                <a href="#" class="text-gray-600 hover:text-gray-800">Contact</a>
+            </li>
+            <li>
+                <a
+                    href="/signup"
+                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md hover-effect"
+                >Sign Up</a>
+            </li>
+            <li>
+                <a
+                    href="/signin"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover-effect-blue"
+                >Sign In</a>
+            </li>
+        </ul>
+    </nav>
+
+    <script>
+        document.getElementById("menu-toggle").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.toggle("open");
+            document.getElementById("menu-overlay").style.display = "block";
+        });
+
+        document.getElementById("menu-close").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.remove("open");
+            document.getElementById("menu-overlay").style.display = "none";
+        });
+
+        document.getElementById("menu-overlay").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.remove("open");
+            this.style.display = "none";
+        });
+    </script>
+</body>
 </html>

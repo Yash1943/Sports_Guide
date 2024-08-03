@@ -110,11 +110,11 @@ def signup(request):
         
         except ValidationError as e:
             messages.error(request, e.message)
-            return redirect('home')
+            return redirect('signup')
         
         except IntegrityError as e:
             messages.error(request, "An error occurred while processing your request. Please try again later.")
-            return redirect('home')
+            return redirect('signup')
     
     return render(request, "authentication/signup.html")
 
@@ -152,7 +152,7 @@ def signin(request):
                 return redirect('admin1')  # Redirect regular users to home page
         else:
             messages.error(request, "Bad Credentials!!")
-            return redirect('home')
+            return redirect('signin')
     return render(request, "authentication/signin.html")
 
 

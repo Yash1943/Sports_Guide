@@ -3,115 +3,160 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/static/icon.png" type="image/x-icon">
+    <link rel="icon" href="/static/icon.png" type="image/x-icon" />
     <meta name="csrf-token" content="<%= csrfToken %>" />
-
     <title>Welcome</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/css/styles.css" />
     <style>
       body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(to right, #3b82f6, #4f46e5);
+        overflow: hidden;
+        color: #333;
         display: flex;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
         height: 100vh;
-        background-color: #fff;
+        padding: 20px;
       }
 
-      .content {
+      .content-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(15px);
+        border-radius: 12px;
+        padding: 40px 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         text-align: center;
       }
 
-      .slideshow-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        overflow: hidden;
-      }
-
-      .slideshow-image {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+      .content-wrapper h1,
+      .content-wrapper p {
+        animation: fadeIn 1s ease-out forwards;
         opacity: 0;
-        transition: opacity 1s ease;
+        color: #1f2937; /* Darker text color */
       }
 
-      .slideshow-image.active {
-        opacity: 1;
+      .content-wrapper h1 {
+        animation-delay: 0.5s;
+      }
+
+      .content-wrapper p {
+        animation-delay: 1s;
+      }
+
+      .content-wrapper .roles a {
+        display: inline-block;
+        margin: 10px;
+        padding: 12px 24px;
+        border-radius: 8px;
+        background: #3b82f6;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        animation: fadeInUp 1s ease-out forwards;
+        opacity: 0;
+      }
+
+      .content-wrapper .roles a:hover {
+        background: #2563eb;
+        transform: translateY(-5px);
+      }
+
+      .content-wrapper .roles a:nth-child(1) {
+        animation-delay: 1.5s;
+      }
+
+      .content-wrapper .roles a:nth-child(2) {
+        animation-delay: 2s;
+      }
+
+      .sign-out-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        background: #ef4444;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        z-index: 100;
+      }
+
+      .sign-out-button:hover {
+        background: #dc2626;
+        transform: translateY(-5px);
+      }
+
+      .message-alert {
+        animation: fadeIn 1s ease-out forwards;
+        opacity: 0;
+        margin-bottom: 20px;
+      }
+
+      .message-alert strong {
+        display: block;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+      }
+
+      /* Define keyframes for animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
     </style>
   </head>
 
   <body>
-  
-    <a
-      href="/signout"
-      class="fixed top-4 right-4 bg-white text-blue-600 px-4 py-2 rounded font-medium shadow hover:bg-blue-600 hover:text-white"
-      >Sign Out</a
-    >
+    <a href="/signout" class="sign-out-button">Sign Out</a>
 
-    <div class="content">
-        <div>
-     {% for message in messages %}
-    <div class="text-2xl alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-      <strong>Message:</strong> {{ message }}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% endfor %}
-  </div>
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
-      <div class="w-full p-4">
-        <h1 class="text-3xl font-bold mb-5">Welcome {{fname}}!</h1>
-        <p class="mb-4">Please select your role:</p>
+    <div class="content-wrapper">
+      {% for message in messages %}
+      <div class="message-alert alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <strong>Message:</strong> {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endfor %}
 
+      <h1 class="text-4xl font-bold mb-5">Welcome {{fname}}!</h1>
+      <p class="text-lg mb-4">Please select your role:</p>
+
+      <div class="roles">
         {% if user.is_staff %}
-
-        <a href="/organizor" class="bg-blue-600 text-white px-5 py-1.5 rounded font-medium mb-4"
-          >Manager</a
-        >
-         <a href="/player" class="bg-blue-600 text-white px-5 py-1.5 rounded font-medium ml-4 mb-4"
-          >Player</a
+        <a href="/organizor" class="px-5 py-2 font-medium transition-all duration-300">
+          Manager
+        </a>
+        <a href="/player" class="px-5 py-2 font-medium transition-all duration-300">
+          Player
+        </a>
         {% else %}
-        <a href="/player" class="bg-blue-600 text-white px-5 py-1.5 rounded font-medium ml-4 mb-4"
-          >Player</a
-        >
+        <a href="/player" class="px-5 py-2 font-medium transition-all duration-300">
+          Player
+        </a>
         {% endif %}
       </div>
     </div>
-
-    <div class="slideshow-container">
-      <img
-        class="slideshow-image active"
-        src="https://images.unsplash.com/photo-1572181804423-c5df037abf13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE0fHx8ZW58MHx8fHx8&auto=format&fit=crop&w=600&q=60"
-        alt="Slideshow Image 1" />
-      <img
-        class="slideshow-image"
-        src="https://images.unsplash.com/flagged/photo-1576972405668-2d020a01cbfa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHRlbm5pc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=60"
-        alt="Slideshow Image 2" />
-      <img
-        class="slideshow-image"
-        src="https://images.unsplash.com/photo-1589801258579-18e091f4ca26?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNyaWNrZXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=600&q=60"
-        alt="Slideshow Image 3" />
-    </div>
-
-    <script>
-      const images = document.querySelectorAll(".slideshow-image");
-      let currentIndex = 0;
-
-      setInterval(() => {
-        images[currentIndex].classList.remove("active");
-        currentIndex = (currentIndex + 1) % images.length;
-        images[currentIndex].classList.add("active");
-      }, 3000);
-    </script>
   </body>
 </html>

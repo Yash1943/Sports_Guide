@@ -7,15 +7,55 @@
     <link rel="icon" href="/static/icon.png" type="image/x-icon" />
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Sign In</title>
+    <style>
+      /* Define keyframes for slideUp */
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(50%);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Apply animation to slide-up elements */
+      .slide-up {
+        opacity: 0;
+        transform: translateY(50%);
+        animation: slideUp 1s ease-out forwards;
+      }
+
+      .slide-up:nth-child(1) {
+        animation-delay: 0.5s;
+      }
+
+      .slide-up:nth-child(2) {
+        animation-delay: 1s;
+      }
+
+      .slide-up:nth-child(3) {
+        animation-delay: 1.5s;
+      }
+
+      .slide-up:nth-child(4) {
+        animation-delay: 2s;
+      }
+
+      .slide-up:nth-child(5) {
+        animation-delay: 2.5s;
+      }
+    </style>
   </head>
   <body class="bg-white text-gray-800">
     <div class="container mx-auto flex justify-center items-center h-screen">
       <a
         href="/"
-        class="absolute top-0 left-0 ml-4 mt-4 text-white bg-gray-600 hover:bg-gray-800 rounded p-3 m-2"
+        class="absolute top-0 left-0 ml-4 mt-4 text-white bg-gray-600 hover:bg-gray-800 rounded p-3 m-2 slide-up"
         >&larr; Back</a
       >
-      <div class="bg-gray-100 px-10 py-8 rounded-lg shadow-lg w-full max-w-md">
+      <div class="bg-gray-100 px-10 py-8 rounded-lg shadow-lg w-full max-w-md slide-up">
         <!-- Display messages -->
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4" role="alert">
@@ -26,12 +66,14 @@
         </div>
         {% endfor %}
         <!-- Header -->
-        <h1 class="text-3xl font-bold mb-4">Welcome to Sports Infrastructure Management</h1>
-        <h3 class="text-xl mb-6">Log In to your account!</h3>
+        <h1 class="text-3xl font-bold mb-4 slide-up">
+          Welcome to Sports-Guide
+        </h1>
+        <h3 class="text-xl mb-6 slide-up">Log In to your account!</h3>
         <!-- Form -->
         <form method="post" action="/signin">
           {% csrf_token %}
-          <div class="form-group mb-4">
+          <div class="form-group mb-4 slide-up">
             <label for="username" class="block text-sm font-medium">Username</label>
             <input
               type="text"
@@ -41,7 +83,7 @@
               placeholder="Enter Your Username"
               required />
           </div>
-          <div class="form-group mb-6">
+          <div class="form-group mb-6 slide-up">
             <label for="pass1" class="block text-sm font-medium">Password</label>
             <input
               type="password"
@@ -53,12 +95,12 @@
           </div>
           <button
             type="submit"
-            class="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 mb-4">
+            class="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 mb-4 slide-up">
             Log In
           </button>
         </form>
         <!-- Signup Link -->
-        <div class="text-center">
+        <div class="text-center slide-up">
           <p class="text-sm">
             Don't have an account?
             <a href="/signup" class="underline text-blue-500 hover:text-blue-700">Sign Up</a>

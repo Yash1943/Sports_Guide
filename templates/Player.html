@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/static/icon.png" type="image/x-icon" />
@@ -8,78 +8,160 @@
     <title>Player</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /* Navbar styles */
-      .navbar {
-        background-color: #003366;
-      }
-      .dropdown-menu {
-        display: none;
-      }
-      .dropdown-menu.show {
-        display: block;
-      }
+        /* Navbar styles */
+        .navbar {
+            background-color: #003366;
+        }
+        .dropdown-menu {
+            display: none;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        /* Animation styles */
+        .fade-in {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+        }
+        /* Settings menu styles */
+        .settings-menu {
+            display: none;
+        }
+        .settings-menu.show {
+            display: block;
+        }
     </style>
-  </head>
-  <body class="bg-white text-gray-800">
-    <div class="container mx-auto p-8">
-      <!-- Navbar -->
-      <nav class="navbar flex justify-between items-center p-4 shadow">
-        <a href="/player" class="navbar-brand text-3xl font-bold text-white">Sports Infrastructure Management</a>
-        <div class="navbar-links flex items-center space-x-4">
-          {% if user.is_staff %}
-          <a href="/organizor" class="text-sm text-white hover:text-gray-300 transition duration-300">Admin Page</a>
-          <a href="/mysession" class="text-sm text-white hover:text-gray-300 transition duration-300">My Sessions</a>
-          <a href="/joinedsessions" class="text-sm text-white hover:text-gray-300 transition duration-300">Joined Sessions</a>
-          <a href="/cancel_sessions" class="text-sm text-white hover:text-gray-300 transition duration-300">Cancelled Sessions</a>
-          {% else %}
-          <a href="/mysession" class="text-sm text-white hover:text-gray-300 transition duration-300">My Sessions</a>
-          <a href="/joinedsessions" class="text-sm text-white hover:text-gray-300 transition duration-300">Joined Sessions</a>
-          <a href="/cancel_sessions" class="text-sm text-white hover:text-gray-300 transition duration-300">Cancelled Sessions</a>
-          {% endif %}
-          <div class="relative">
-            <!-- Account icon -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 cursor-pointer text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              onclick="toggleDropdown()">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="navbar flex flex-wrap justify-between items-center p-4 shadow-md m-4">
+        <a href="/player" class="text-3xl font-bold text-white hover:text-gray-300 transition duration-300">Sports-Guide</a>
+        <button id="menu-toggle" class="md:hidden bg-gray-200 p-2 rounded-md focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
-            <!-- Dropdown menu -->
-            <div
-              id="accountDropdown"
-              class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-10">
-              <a href="/signout" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900">Sign Out</a>
-              <a href="/change_password" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900">Change Password</a>
+        </button>
+        <div id="navbar-menu" class="hidden md:flex flex-wrap items-center space-x-4">
+            {% if user.is_staff %}
+            <a href="/organizor" class="text-sm text-white hover:text-gray-300 transition duration-300">Admin Page</a>
+            <a href="/mysession" class="text-sm text-white hover:text-gray-300 transition duration-300">My Sessions</a>
+            <a href="/joinedsessions" class="text-sm text-white hover:text-gray-300 transition duration-300">Joined Sessions</a>
+            <a href="/cancel_sessions" class="text-sm text-white hover:text-gray-300 transition duration-300">Cancelled Sessions</a>
+            {% else %}
+            <a href="/mysession" class="text-sm text-white hover:text-gray-300 transition duration-300">My Sessions</a>
+            <a href="/joinedsessions" class="text-sm text-white hover:text-gray-300 transition duration-300">Joined Sessions</a>
+            <a href="/cancel_sessions" class="text-sm text-white hover:text-gray-300 transition duration-300">Cancelled Sessions</a>
+            {% endif %}
+            <div class="relative">
+                <!-- Account icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 cursor-pointer text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" onclick="toggleDropdown()">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+                <!-- Dropdown menu -->
+                <div id="accountDropdown" class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-10">
+                    <a href="/signout" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900">Sign Out</a>
+                    <a href="/change_password" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900">Change Password</a>
+                </div>
             </div>
-          </div>
+            <!-- Settings Toggle -->
+            <div class="relative">
+                <button id="settings-toggle" class="text-white focus:outline-none">
+                    {% comment %} <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg> {% endcomment %}
+                </button>
+                <!-- Settings menu -->
+                {% comment %} <div id="settingsMenu" class="settings-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-10">
+                    <a href="/settings/profile" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900">Profile Settings</a>
+                    <a href="/settings/preferences" class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900">Preferences</a>
+                </div> {% endcomment %}
+            </div>
         </div>
-      </nav>
-      <!-- Sports List -->
-      {% if csports %}
-      <h2 class="text-2xl text-gray-800 mt-8 mb-4">List of Sports:</h2>
-      <ul class="sports-list space-y-2">
-        {% for sport in csports %}
-        <li class="bg-cyan-500 text-white shadow-lg px-5 py-2 rounded hover:bg-cyan-600">
-          <a href="{% url 'filtered_sessions' sport.id %}">{{ sport.sport_name }}</a>
-        </li>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p class="text-gray-600 mt-8">No sports created yet</p>
-      {% endif %}
-      <!-- Session List -->
-      <div id="sessionList" class="mt-8">
-        <!-- Session list will be displayed here -->
-      </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+    <!-- Mobile Menu -->
+    <nav id="mobile-menu" class="fixed top-0 right-0 w-64 bg-white shadow-lg z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+        <button id="menu-close" class="absolute top-4 right-4 text-gray-800 ">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <ul class="flex flex-col p-4 space-y-4">
+            {% if user.is_staff %}
+            <li><a href="/organizor" class="text-gray-800 hover:bg-gray-200 p-2 rounded">Admin Page</a></li>
+            {% endif %}
+            <li><a href="/mysession" class="text-gray-800 hover:bg-gray-200 p-2 rounded">My Sessions</a></li>
+            <li><a href="/joinedsessions" class="text-gray-800 hover:bg-gray-200 p-2 rounded">Joined Sessions</a></li>
+            <li><a href="/cancel_sessions" class="text-gray-800 hover:bg-gray-200 p-2 rounded">Cancelled Sessions</a></li>
+            <li><a href="/signout" class="text-gray-800 hover:bg-red-600 hover:text-white p-2 rounded">Sign Out</a></li>
+            <li><a href="/change_password" class="text-gray-800 hover:bg-gray-200 p-2 rounded">Change Password</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-8">
+        <!-- Sports List -->
+        {% if csports %}
+        <h2 class="text-2xl text-gray-800 mt-8 mb-4 fade-in">List of Sports:</h2>
+        <ul class="sports-list space-y-2">
+            {% for sport in csports %}
+            <li class="bg-cyan-500 text-white shadow-lg px-5 py-2 rounded hover:bg-cyan-600 transition-transform transform hover:scale-105 duration-300 ease-in-out fade-in">
+                <a href="{% url 'filtered_sessions' sport.id %}">{{ sport.sport_name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-gray-600 mt-8 fade-in">No sports created yet</p>
+        {% endif %}
+        <!-- Session List -->
+        <div id="sessionList" class="mt-8">
+            <!-- Session list will be displayed here -->
+        </div>
     </div>
+
     <script>
-      function toggleDropdown() {
-        var dropdown = document.getElementById("accountDropdown");
-        dropdown.classList.toggle("show");
-      }
+        function toggleDropdown() {
+            var dropdown = document.getElementById("accountDropdown");
+            dropdown.classList.toggle("show");
+        }
+
+        function toggleSettingsMenu() {
+            var settingsMenu = document.getElementById("settingsMenu");
+            settingsMenu.classList.toggle("show");
+        }
+
+        // Toggle mobile menu
+        document.getElementById("menu-toggle").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.remove("translate-x-full");
+            document.getElementById("menu-overlay").classList.remove("hidden");
+        });
+
+        document.getElementById("menu-close").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.add("translate-x-full");
+            document.getElementById("menu-overlay").classList.add("hidden");
+        });
+
+        document.getElementById("menu-overlay").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.add("translate-x-full");
+            this.classList.add("hidden");
+        });
+
+        // Toggle settings menu
+        document.getElementById("settings-toggle").addEventListener("click", function () {
+            toggleSettingsMenu();
+        });
+
+        // Add fade-in animation
+        document.querySelectorAll('.fade-in').forEach(element => {
+            element.classList.add('visible');
+        });
     </script>
-  </body>
+</body>
 </html>
