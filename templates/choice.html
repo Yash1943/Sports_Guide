@@ -1,43 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Team Selection</title>
-  </head>
-  <body>
-    <h1>Team Selection</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {% if session %}
-      <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-lg font-semibold mb-4">{{ session.sport_name }}</h2>
-        <!-- Display other details for the selected session -->
-        <p class="text-gray-700 mb-2">
-          <span class="font-semibold">Venue:</span> {{ session.venue }}
-        </p>
-        <p class="text-gray-700 mb-2">
-          <span class="font-semibold">Number of Teams:</span> {{ session.number_of_teams }}
-        </p>
-        <p class="text-gray-700 mb-2">
-          <span class="font-semibold">Time:</span> {{ session.time }}
-        </p>
-        <!-- Add other details as needed -->
-        <form>
-          {% for i in session.team_range %}
-          <label for="team{{ i }}PlayerType">Select player type for Team {{ i }}:</label>
-          <select id="team{{ i }}PlayerType" name="team{{ i }}PlayerType">
-            <option value="batting">Batting</option>
-            <option value="bowling">Bowling</option>
-            <option value="allrounder">All-Rounder</option>
-          </select>
-          <button>submit</button>
-          <br />
-          {% endfor %}
-        </form>
-      </div>
-      {% else %}
-      <p>No session found.</p>
-      {% endif %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .selected-result {
+            margin: 10px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .player-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .player-list li {
+            margin-bottom: 5px;
+        }
+        #results {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        h3 {
+            margin-top: 0;
+        }
+        /* Responsive styles */
+        @media (min-width: 768px) {
+            .selected-result {
+                width: 48%;
+            }
+        }
+        @media (min-width: 1024px) {
+            .selected-result {
+                width: 30%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    {% if user.is_staff %}
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Team Selection</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% if session %}
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-lg font-semibold mb-4">{{ session.sport_name }}</h2>
+                <p class="text-gray-700 mb-2">
+                    <span class="font-semibold">Venue:</span> {{ session.venue }}
+                </p>
+                <p class="text-gray-700 mb-2">
+                    <span class="font-semibold">Number of Teams:</span> {{ session.number_of_teams }}
+                </p>
+                <p class="text-gray-700 mb-2">
+                    <span class="font-semibold">Time:</span> {{ session.time }}
+                </p>
+                <form onsubmit="submitTeams(event)" class="mt-4">
+                    {% for i in session.team_range %}
+                    <div class="mb-4">
+                        <label for="team{{ i }}PlayerType" class="block text-gray-700 font-semibold mb-2">Select player type for Team {{ i }}:</label>
+                        <select id="team{{ i }}PlayerType" name="team{{ i }}PlayerType" class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="batting">Batting</option>
+                            <option value="bowling">Bowling</option>
+                            <option value="allrounder">All-Rounder</option>
+                        </select>
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Submit</button>
+                    <button type="button" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300 ml-2">Save Teams</button>
+                </form>
+            </div>
+            {% else %}
+            <p class="text-center text-gray-600 col-span-full">No session found.</p>
+            {% endif %}
+        </div>
+        <div id="results" class="mt-8"></div>
     </div>
-  </body>
+    {% else %}
+    <div class="container mx-auto p-8">
+        <p class="text-center text-red-500">You do not have permission to view this page.</p>
+    </div>
+    {% endif %}
+
+    <script>
+        const players = {
+            batting: ["Player A", "Player B", "Player C", "Player D", "Player E", "Player F", "Player G", "Player H", "Player I", "Player J", "Player K"],
+            bowling: ["Player L", "Player M", "Player N", "Player O", "Player P", "Player Q", "Player R", "Player S", "Player T", "Player U", "Player V"],
+            allrounder: ["Player W", "Player X", "Player Y", "Player Z", "Player AA", "Player BB", "Player CC", "Player DD", "Player EE", "Player FF", "Player GG"]
+        };
+
+        function submitTeams(event) {
+            event.preventDefault();
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = '';
+
+            const selectElements = document.querySelectorAll('select');
+            selectElements.forEach((select, index) => {
+                const selectedOption = select.value;
+                const playerList = players[selectedOption];
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'selected-result';
+
+                const teamTitle = document.createElement('h3');
+                teamTitle.textContent = `Team ${index + 1}: ${selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)}`;
+                resultDiv.appendChild(teamTitle);
+
+                const ul = document.createElement('ul');
+                ul.className = 'player-list';
+
+                playerList.forEach(player => {
+                    const li = document.createElement('li');
+                    li.textContent = player;
+                    ul.appendChild(li);
+                });
+
+                resultDiv.appendChild(ul);
+                resultsContainer.appendChild(resultDiv);
+            });
+        }
+    </script>
+</body>
 </html>
