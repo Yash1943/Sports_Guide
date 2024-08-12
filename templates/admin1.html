@@ -10,7 +10,7 @@
     <style>
       body {
         margin: 0;
-        font-family: 'Inter', sans-serif;
+        font-family: "Inter", sans-serif;
         background: linear-gradient(to right, #3b82f6, #4f46e5);
         overflow: hidden;
         color: #333;
@@ -132,7 +132,9 @@
 
     <div class="content-wrapper">
       {% for message in messages %}
-      <div class="message-alert alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <div
+        class="message-alert alert alert-{{ message.tags }} alert-dismissible fade show"
+        role="alert">
         <strong>Message:</strong> {{ message }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -145,16 +147,10 @@
 
       <div class="roles">
         {% if user.is_staff %}
-        <a href="/organizor" class="px-5 py-2 font-medium transition-all duration-300">
-          Manager
-        </a>
-        <a href="/player" class="px-5 py-2 font-medium transition-all duration-300">
-          Player
-        </a>
+        <a href="/organizor" class="px-5 py-2 font-medium transition-all duration-300"> Manager </a>
+        <a href="/player" class="px-5 py-2 font-medium transition-all duration-300"> Player </a>
         {% else %}
-        <a href="/player" class="px-5 py-2 font-medium transition-all duration-300">
-          Player
-        </a>
+        <a href="/player" class="px-5 py-2 font-medium transition-all duration-300"> Player </a>
         {% endif %}
       </div>
     </div>

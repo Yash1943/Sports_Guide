@@ -1,131 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Team Selection</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+      .selected-result {
+        margin: 10px;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .player-list {
+        list-style-type: none;
+        padding: 0;
+      }
+      .player-list li {
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      #results {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      form {
+        margin-bottom: 20px;
+      }
+      h3 {
+        margin-top: 0;
+      }
+      /* Responsive styles */
+      @media (min-width: 768px) {
         .selected-result {
-            margin: 10px;
-            padding: 20px;
-            background-color: #f0f0f0;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          width: 48%;
         }
-        .player-list {
-            list-style-type: none;
-            padding: 0;
+      }
+      @media (min-width: 1024px) {
+        .selected-result {
+          width: 30%;
         }
-        .player-list li {
-            margin-bottom: 5px;
-        }
-        #results {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 20px;
-        }
-        form {
-            margin-bottom: 20px;
-        }
-        h3 {
-            margin-top: 0;
-        }
-        /* Responsive styles */
-        @media (min-width: 768px) {
-            .selected-result {
-                width: 48%;
-            }
-        }
-        @media (min-width: 1024px) {
-            .selected-result {
-                width: 30%;
-            }
-        }
+      }
     </style>
-</head>
-<body class="bg-gray-100 text-gray-800">
-
+  </head>
+  <body class="bg-gray-100 text-gray-800">
     {% if user.is_staff %}
     <div class="container mx-auto p-8">
-        <h1 class="text-3xl font-bold text-center mb-8">Team Selection</h1>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {% if session %}
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-lg font-semibold mb-4">{{ session.sport_name }}</h2>
-                <p class="text-gray-700 mb-2">
-                    <span class="font-semibold">Venue:</span> {{ session.venue }}
-                </p>
-                <p class="text-gray-700 mb-2">
-                    <span class="font-semibold">Number of Teams:</span> {{ session.number_of_teams }}
-                </p>
-                <p class="text-gray-700 mb-2">
-                    <span class="font-semibold">Time:</span> {{ session.time }}
-                </p>
-                <form onsubmit="submitTeams(event)" class="mt-4">
-                    {% for i in session.team_range %}
-                    <div class="mb-4">
-                        <label for="team{{ i }}PlayerType" class="block text-gray-700 font-semibold mb-2">Select player type for Team {{ i }}:</label>
-                        <select id="team{{ i }}PlayerType" name="team{{ i }}PlayerType" class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="batting">Batting</option>
-                            <option value="bowling">Bowling</option>
-                            <option value="allrounder">All-Rounder</option>
-                        </select>
-                    </div>
-                    {% endfor %}
-                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Submit</button>
-                    <button type="button" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300 ml-2">Save Teams</button>
-                </form>
+      <h1 class="text-3xl font-bold text-center mb-8">Team Selection</h1>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% if session %}
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-lg font-semibold mb-4">{{ session.sport_name }}</h2>
+          <p class="text-gray-700 mb-2">
+            <span class="font-semibold">Venue:</span> {{ session.venue }}
+          </p>
+          <p class="text-gray-700 mb-2">
+            <span class="font-semibold">Number of Teams:</span> {{ session.number_of_teams }}
+          </p>
+          <p class="text-gray-700 mb-2">
+            <span class="font-semibold">Time:</span> {{ session.time }}
+          </p>
+          <form onsubmit="submitTeams(event)" class="mt-4">
+            {% for i in session.team_range %}
+            <div class="mb-4">
+              <label for="team{{ i }}PlayerType" class="block text-gray-700 font-semibold mb-2"
+                >Select player type for Team {{ i }}:</label
+              >
+              <select
+                id="team{{ i }}PlayerType"
+                name="team{{ i }}PlayerType"
+                class="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="batting">Batting</option>
+                <option value="bowling">Bowling</option>
+                <option value="allrounder">All-Rounder</option>
+              </select>
             </div>
-            {% else %}
-            <p class="text-center text-gray-600 col-span-full">No session found.</p>
-            {% endif %}
+            {% endfor %}
+            <button
+              type="submit"
+              class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">
+              Submit
+            </button>
+            <button
+              type="button"
+              class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300 ml-2">
+              Save Teams
+            </button>
+          </form>
         </div>
-        <div id="results" class="mt-8"></div>
+        {% else %}
+        <p class="text-center text-gray-600 col-span-full">No session found.</p>
+        {% endif %}
+      </div>
+      <div id="results" class="mt-8"></div>
     </div>
     {% else %}
     <div class="container mx-auto p-8">
-        <p class="text-center text-red-500">You do not have permission to view this page.</p>
+      <p class="text-center text-red-500">You do not have permission to view this page.</p>
     </div>
     {% endif %}
 
     <script>
-        const players = {
-            batting: ["Player A", "Player B", "Player C", "Player D", "Player E", "Player F", "Player G", "Player H", "Player I", "Player J", "Player K"],
-            bowling: ["Player L", "Player M", "Player N", "Player O", "Player P", "Player Q", "Player R", "Player S", "Player T", "Player U", "Player V"],
-            allrounder: ["Player W", "Player X", "Player Y", "Player Z", "Player AA", "Player BB", "Player CC", "Player DD", "Player EE", "Player FF", "Player GG"]
-        };
+      const players = {
+        batting: ["Player A", "Player B", "Player C", "Player D", "Player E"],
+        bowling: ["Player L", "Player M", "Player N", "Player O", "Player P"],
+        allrounder: ["Player W", "Player X", "Player Y", "Player Z", "Player AA"],
+      };
 
-        function submitTeams(event) {
-            event.preventDefault();
-            const resultsContainer = document.getElementById('results');
-            resultsContainer.innerHTML = '';
+      function submitTeams(event) {
+        event.preventDefault();
+        const resultsContainer = document.getElementById("results");
+        resultsContainer.innerHTML = "";
 
-            const selectElements = document.querySelectorAll('select');
-            selectElements.forEach((select, index) => {
-                const selectedOption = select.value;
-                const playerList = players[selectedOption];
-                const resultDiv = document.createElement('div');
-                resultDiv.className = 'selected-result';
+        const selectElements = document.querySelectorAll("select");
+        selectElements.forEach((select, index) => {
+          const selectedOption = select.value;
+          const playerList = [...players[selectedOption]];
+          const resultDiv = document.createElement("div");
+          resultDiv.className = "selected-result";
+          resultDiv.dataset.teamIndex = index;
 
-                const teamTitle = document.createElement('h3');
-                teamTitle.textContent = `Team ${index + 1}: ${selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1)}`;
-                resultDiv.appendChild(teamTitle);
+          // Create an input field for editing the team name
+          const teamNameInput = document.createElement("input");
+          teamNameInput.type = "text";
+          teamNameInput.className =
+            "text-xl font-bold mb-2 w-full p-2 border border-gray-300 rounded-md";
+          teamNameInput.value = `Team ${index + 1}`;
+          resultDiv.appendChild(teamNameInput);
 
-                const ul = document.createElement('ul');
-                ul.className = 'player-list';
+          const ul = document.createElement("ul");
+          ul.className = "player-list";
+          ul.dataset.playerType = selectedOption;
 
-                playerList.forEach(player => {
-                    const li = document.createElement('li');
-                    li.textContent = player;
-                    ul.appendChild(li);
-                });
+          playerList.forEach((player, playerIndex) => {
+            const li = document.createElement("li");
 
-                resultDiv.appendChild(ul);
-                resultsContainer.appendChild(resultDiv);
-            });
+            const playerName = document.createElement("span");
+            playerName.textContent = player;
+            li.appendChild(playerName);
+
+            const editPlayerButton = document.createElement("button");
+            editPlayerButton.className = "text-blue-500 ml-2";
+            editPlayerButton.textContent = "Edit";
+            editPlayerButton.onclick = () => editPlayer(index, playerIndex, selectedOption, ul);
+            li.appendChild(editPlayerButton);
+
+            const removePlayerButton = document.createElement("button");
+            removePlayerButton.className = "text-red-500 ml-2";
+            removePlayerButton.textContent = "Remove";
+            removePlayerButton.onclick = () => removePlayer(index, playerIndex, ul, selectedOption);
+            li.appendChild(removePlayerButton);
+
+            ul.appendChild(li);
+          });
+
+          const addPlayerForm = document.createElement("form");
+          addPlayerForm.onsubmit = (e) => addPlayer(e, index, ul, selectedOption);
+          addPlayerForm.className = "mt-4";
+
+          const addPlayerInput = document.createElement("input");
+          addPlayerInput.type = "text";
+          addPlayerInput.placeholder = "Enter player name";
+          addPlayerInput.className = "border border-gray-300 rounded-md p-2 mr-2";
+
+          const addPlayerButton = document.createElement("button");
+          addPlayerButton.type = "submit";
+          addPlayerButton.className =
+            "bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300";
+          addPlayerButton.textContent = "Add Player";
+
+          addPlayerForm.appendChild(addPlayerInput);
+          addPlayerForm.appendChild(addPlayerButton);
+
+          resultDiv.appendChild(ul);
+          resultDiv.appendChild(addPlayerForm);
+
+          const editButton = document.createElement("button");
+          editButton.className =
+            "bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600 transition duration-300 mt-2";
+          editButton.textContent = "Edit Team Type";
+          editButton.onclick = () => editTeam(index);
+          resultDiv.appendChild(editButton);
+
+          resultsContainer.appendChild(resultDiv);
+        });
+      }
+
+      function editPlayer(teamIndex, playerIndex, playerType, ulElement) {
+        const li = ulElement.children[playerIndex];
+        const playerName = players[playerType][playerIndex];
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = playerName;
+        input.className = "border border-gray-300 rounded-md p-1 mr-2";
+
+        li.innerHTML = "";
+        li.appendChild(input);
+
+        const savePlayerButton = document.createElement("button");
+        savePlayerButton.className = "text-green-500";
+        savePlayerButton.textContent = "Save";
+        savePlayerButton.onclick = () =>
+          savePlayer(teamIndex, playerIndex, input.value, playerType, ulElement);
+        li.appendChild(savePlayerButton);
+
+        const cancelPlayerButton = document.createElement("button");
+        cancelPlayerButton.className = "text-gray-500 ml-2";
+        cancelPlayerButton.textContent = "Cancel";
+        cancelPlayerButton.onclick = () => cancelEditPlayer(playerName, li);
+        li.appendChild(cancelPlayerButton);
+      }
+
+      function savePlayer(teamIndex, playerIndex, newPlayerName, playerType, ulElement) {
+        players[playerType][playerIndex] = newPlayerName;
+
+        const li = ulElement.children[playerIndex];
+        li.innerHTML = "";
+
+        const playerName = document.createElement("span");
+        playerName.textContent = newPlayerName;
+        li.appendChild(playerName);
+
+        const editPlayerButton = document.createElement("button");
+        editPlayerButton.className = "text-blue-500 ml-2";
+        editPlayerButton.textContent = "Edit";
+        editPlayerButton.onclick = () => editPlayer(teamIndex, playerIndex, playerType, ulElement);
+        li.appendChild(editPlayerButton);
+
+        const removePlayerButton = document.createElement("button");
+        removePlayerButton.className = "text-red-500 ml-2";
+        removePlayerButton.textContent = "Remove";
+        removePlayerButton.onclick = () =>
+          removePlayer(teamIndex, playerIndex, ulElement, playerType);
+        li.appendChild(removePlayerButton);
+      }
+
+      function cancelEditPlayer(playerName, liElement) {
+        liElement.innerHTML = "";
+
+        const span = document.createElement("span");
+        span.textContent = playerName;
+        liElement.appendChild(span);
+
+        const editPlayerButton = document.createElement("button");
+        editPlayerButton.className = "text-blue-500 ml-2";
+        editPlayerButton.textContent = "Edit";
+        liElement.appendChild(editPlayerButton);
+
+        const removePlayerButton = document.createElement("button");
+        removePlayerButton.className = "text-red-500 ml-2";
+        removePlayerButton.textContent = "Remove";
+        liElement.appendChild(removePlayerButton);
+      }
+
+      function removePlayer(teamIndex, playerIndex, ulElement, playerType) {
+        players[playerType].splice(playerIndex, 1);
+        const li = ulElement.children[playerIndex];
+        li.remove();
+      }
+
+      function addPlayer(event, teamIndex, ulElement, playerType) {
+        event.preventDefault();
+        const input = event.target.elements[0];
+        const newPlayerName = input.value.trim();
+        if (newPlayerName) {
+          players[playerType].push(newPlayerName);
+
+          const li = document.createElement("li");
+
+          const playerName = document.createElement("span");
+          playerName.textContent = newPlayerName;
+          li.appendChild(playerName);
+
+          const editPlayerButton = document.createElement("button");
+          editPlayerButton.className = "text-blue-500 ml-2";
+          editPlayerButton.textContent = "Edit";
+          editPlayerButton.onclick = () =>
+            editPlayer(teamIndex, players[playerType].length - 1, playerType, ulElement);
+          li.appendChild(editPlayerButton);
+
+          const removePlayerButton = document.createElement("button");
+          removePlayerButton.className = "text-red-500 ml-2";
+          removePlayerButton.textContent = "Remove";
+          removePlayerButton.onclick = () =>
+            removePlayer(teamIndex, players[playerType].length - 1, ulElement, playerType);
+          li.appendChild(removePlayerButton);
+
+          ulElement.appendChild(li);
+          input.value = "";
         }
+      }
+
+      function editTeam(teamIndex) {
+        const teamDiv = document.querySelector(`.selected-result[data-team-index="${teamIndex}"]`);
+        const ul = teamDiv.querySelector(".player-list");
+        const selectedPlayerType = ul.dataset.playerType;
+
+        const select = document.createElement("select");
+        select.className =
+          "block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500";
+        select.innerHTML = `
+                <option value="batting" ${
+                  selectedPlayerType === "batting" ? "selected" : ""
+                }>Batting</option>
+                <option value="bowling" ${
+                  selectedPlayerType === "bowling" ? "selected" : ""
+                }>Bowling</option>
+                <option value="allrounder" ${
+                  selectedPlayerType === "allrounder" ? "selected" : ""
+                }>All-Rounder</option>
+            `;
+
+        const saveButton = document.createElement("button");
+        saveButton.className =
+          "bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300";
+        saveButton.textContent = "Save Changes";
+        saveButton.onclick = () => saveTeamChanges(teamIndex, select.value);
+
+        teamDiv.innerHTML = "";
+        teamDiv.appendChild(select);
+        teamDiv.appendChild(saveButton);
+      }
+
+      function saveTeamChanges(teamIndex, newPlayerType) {
+        const teamDiv = document.querySelector(`.selected-result[data-team-index="${teamIndex}"]`);
+        const ul = teamDiv.querySelector(".player-list");
+
+        ul.innerHTML = "";
+        players[newPlayerType].forEach((player, playerIndex) => {
+          const li = document.createElement("li");
+
+          const playerName = document.createElement("span");
+          playerName.textContent = player;
+          li.appendChild(playerName);
+
+          const editPlayerButton = document.createElement("button");
+          editPlayerButton.className = "text-blue-500 ml-2";
+          editPlayerButton.textContent = "Edit";
+          editPlayerButton.onclick = () => editPlayer(teamIndex, playerIndex, newPlayerType, ul);
+          li.appendChild(editPlayerButton);
+
+          const removePlayerButton = document.createElement("button");
+          removePlayerButton.className = "text-red-500 ml-2";
+          removePlayerButton.textContent = "Remove";
+          removePlayerButton.onclick = () =>
+            removePlayer(teamIndex, playerIndex, ul, newPlayerType);
+          li.appendChild(removePlayerButton);
+
+          ul.appendChild(li);
+        });
+
+        ul.dataset.playerType = newPlayerType;
+
+        const teamNameInput = document.createElement("input");
+        teamNameInput.type = "text";
+        teamNameInput.className =
+          "text-xl font-bold mb-2 w-full p-2 border border-gray-300 rounded-md";
+        teamNameInput.value = `Team ${teamIndex + 1}`;
+        teamDiv.prepend(teamNameInput);
+      }
     </script>
-</body>
+  </body>
 </html>

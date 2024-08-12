@@ -81,6 +81,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Sports_Guide.wsgi.application'
 
 
+
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
