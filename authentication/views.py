@@ -32,8 +32,15 @@ def login_required(view_func):
 def home(request):
     return render(request, "authentication/index.html")
 
-def sports_homePage(request):
-    return redirect(request,"sports.html")
+def sports(request):
+    return render(request, "authentication/sports.html")
+
+def contact(request):
+    return render(request, "authentication/contact.html")
+
+def about(request):
+    return render(request, "authentication/about.html")
+
 
 @login_required
 def player(request):
