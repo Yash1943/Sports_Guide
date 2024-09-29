@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Team Selection</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet" />
     <style>
       .selected-result {
         margin: 10px;
@@ -88,7 +90,8 @@
             </button>
             <button
               type="button"
-              class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300 ml-2">
+              class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300 ml-2"
+              onclick="saveTeams()">
               Save Teams
             </button>
           </form>
@@ -241,56 +244,71 @@
         li.appendChild(removePlayerButton);
       }
 
-      function cancelEditPlayer(playerName, liElement) {
+      function cancelEditPlayer(originalName, liElement) {
         liElement.innerHTML = "";
 
-        const span = document.createElement("span");
-        span.textContent = playerName;
-        liElement.appendChild(span);
+        const playerName = document.createElement("span");
+        playerName.textContent = originalName;
+        liElement.appendChild(playerName);
 
         const editPlayerButton = document.createElement("button");
         editPlayerButton.className = "text-blue-500 ml-2";
         editPlayerButton.textContent = "Edit";
+        editPlayerButton.onclick = () =>
+          editPlayer(
+            parseInt(liElement.closest(".selected-result").dataset.teamIndex),
+            parseInt(liElement.dataset.playerIndex),
+            liElement.closest(".player-list").dataset.playerType,
+            liElement.closest(".player-list")
+          );
         liElement.appendChild(editPlayerButton);
 
         const removePlayerButton = document.createElement("button");
         removePlayerButton.className = "text-red-500 ml-2";
         removePlayerButton.textContent = "Remove";
+        removePlayerButton.onclick = () =>
+          removePlayer(
+            parseInt(liElement.closest(".selected-result").dataset.teamIndex),
+            parseInt(liElement.dataset.playerIndex),
+            liElement.closest(".player-list"),
+            liElement.closest(".player-list").dataset.playerType
+          );
         liElement.appendChild(removePlayerButton);
       }
 
       function removePlayer(teamIndex, playerIndex, ulElement, playerType) {
         players[playerType].splice(playerIndex, 1);
         const li = ulElement.children[playerIndex];
-        li.remove();
+        ulElement.removeChild(li);
       }
 
       function addPlayer(event, teamIndex, ulElement, playerType) {
         event.preventDefault();
-        const input = event.target.elements[0];
-        const newPlayerName = input.value.trim();
-        if (newPlayerName) {
-          players[playerType].push(newPlayerName);
+        const input = event.target.querySelector("input");
+        const playerName = input.value.trim();
+
+        if (playerName) {
+          players[playerType].push(playerName);
 
           const li = document.createElement("li");
 
-          const playerName = document.createElement("span");
-          playerName.textContent = newPlayerName;
-          li.appendChild(playerName);
+          const playerSpan = document.createElement("span");
+          playerSpan.textContent = playerName;
+          li.appendChild(playerSpan);
 
-          const editPlayerButton = document.createElement("button");
-          editPlayerButton.className = "text-blue-500 ml-2";
-          editPlayerButton.textContent = "Edit";
-          editPlayerButton.onclick = () =>
+          const editButton = document.createElement("button");
+          editButton.className = "text-blue-500 ml-2";
+          editButton.textContent = "Edit";
+          editButton.onclick = () =>
             editPlayer(teamIndex, players[playerType].length - 1, playerType, ulElement);
-          li.appendChild(editPlayerButton);
+          li.appendChild(editButton);
 
-          const removePlayerButton = document.createElement("button");
-          removePlayerButton.className = "text-red-500 ml-2";
-          removePlayerButton.textContent = "Remove";
-          removePlayerButton.onclick = () =>
+          const removeButton = document.createElement("button");
+          removeButton.className = "text-red-500 ml-2";
+          removeButton.textContent = "Remove";
+          removeButton.onclick = () =>
             removePlayer(teamIndex, players[playerType].length - 1, ulElement, playerType);
-          li.appendChild(removePlayerButton);
+          li.appendChild(removeButton);
 
           ulElement.appendChild(li);
           input.value = "";
@@ -299,71 +317,77 @@
 
       function editTeam(teamIndex) {
         const teamDiv = document.querySelector(`.selected-result[data-team-index="${teamIndex}"]`);
-        const ul = teamDiv.querySelector(".player-list");
-        const selectedPlayerType = ul.dataset.playerType;
+        const select = document.querySelector(`#team${teamIndex}PlayerType`);
 
-        const select = document.createElement("select");
-        select.className =
-          "block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500";
-        select.innerHTML = `
-                <option value="batting" ${
-                  selectedPlayerType === "batting" ? "selected" : ""
-                }>Batting</option>
-                <option value="bowling" ${
-                  selectedPlayerType === "bowling" ? "selected" : ""
-                }>Bowling</option>
-                <option value="allrounder" ${
-                  selectedPlayerType === "allrounder" ? "selected" : ""
-                }>All-Rounder</option>
-            `;
+        const currentType = select.value;
+        const newType = prompt(
+          "Enter new player type (batting, bowling, allrounder):"
+        ).toLowerCase();
 
-        const saveButton = document.createElement("button");
-        saveButton.className =
-          "bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition duration-300";
-        saveButton.textContent = "Save Changes";
-        saveButton.onclick = () => saveTeamChanges(teamIndex, select.value);
+        if (["batting", "bowling", "allrounder"].includes(newType)) {
+          select.value = newType;
+          const ul = teamDiv.querySelector(".player-list");
+          ul.dataset.playerType = newType;
+          const playersList = [...players[newType]];
 
-        teamDiv.innerHTML = "";
-        teamDiv.appendChild(select);
-        teamDiv.appendChild(saveButton);
+          while (ul.firstChild) {
+            ul.removeChild(ul.firstChild);
+          }
+
+          playersList.forEach((player) => {
+            const li = document.createElement("li");
+            li.textContent = player;
+            ul.appendChild(li);
+          });
+        } else {
+          alert("Invalid player type.");
+        }
       }
 
-      function saveTeamChanges(teamIndex, newPlayerType) {
-        const teamDiv = document.querySelector(`.selected-result[data-team-index="${teamIndex}"]`);
-        const ul = teamDiv.querySelector(".player-list");
+      function saveTeams() {
+        const teamsData = Array.from(document.querySelectorAll(".selected-result")).map(
+          (teamDiv) => {
+            return {
+              teamName: teamDiv.querySelector("input").value,
+              playerType: teamDiv.querySelector(".player-list").dataset.playerType,
+              players: Array.from(teamDiv.querySelectorAll(".player-list li")).map((li) =>
+                li.textContent.trim()
+              ),
+            };
+          }
+        );
 
-        ul.innerHTML = "";
-        players[newPlayerType].forEach((player, playerIndex) => {
-          const li = document.createElement("li");
+        fetch("/save-teams/", {
+          // Adjust the URL to match your Django view
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken"), // Ensure CSRF token is included
+          },
+          body: JSON.stringify(teamsData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Teams saved successfully:", data);
+          })
+          .catch((error) => {
+            console.error("Error saving teams:", error);
+          });
+      }
 
-          const playerName = document.createElement("span");
-          playerName.textContent = player;
-          li.appendChild(playerName);
-
-          const editPlayerButton = document.createElement("button");
-          editPlayerButton.className = "text-blue-500 ml-2";
-          editPlayerButton.textContent = "Edit";
-          editPlayerButton.onclick = () => editPlayer(teamIndex, playerIndex, newPlayerType, ul);
-          li.appendChild(editPlayerButton);
-
-          const removePlayerButton = document.createElement("button");
-          removePlayerButton.className = "text-red-500 ml-2";
-          removePlayerButton.textContent = "Remove";
-          removePlayerButton.onclick = () =>
-            removePlayer(teamIndex, playerIndex, ul, newPlayerType);
-          li.appendChild(removePlayerButton);
-
-          ul.appendChild(li);
-        });
-
-        ul.dataset.playerType = newPlayerType;
-
-        const teamNameInput = document.createElement("input");
-        teamNameInput.type = "text";
-        teamNameInput.className =
-          "text-xl font-bold mb-2 w-full p-2 border border-gray-300 rounded-md";
-        teamNameInput.value = `Team ${teamIndex + 1}`;
-        teamDiv.prepend(teamNameInput);
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
       }
     </script>
   </body>

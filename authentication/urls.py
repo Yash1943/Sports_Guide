@@ -12,6 +12,7 @@ urlpatterns = [
     path('signout', views.signout, name='signout'),
     path('admin1', views.admin1, name='admin1'),
     path('player', views.player, name='player'),
+    path('sports_homePage',views.sports_homePage,name='sports_homePage'),
     path('organizor', views.organizor, name='organizor'),
     path('mysession', views.mysession, name='mysession'),
     path('joinedsessions', views.joinedsessions, name='joinedsessions'),
@@ -25,8 +26,10 @@ urlpatterns = [
     path('create-session/', views.create_session, name='create_session'), 
     path('recommendation/<str:sport_name>/<int:session_id>/', views.recommendation, name='recommendation'),
     path('filtered_sessions/<int:sport_id>/', views.filtered_sessions, name='filtered_sessions'),
-    path('recommendation/<int:sport_id>/', filtered_sessions, name='recommendation'),
+    path('recommendation/<int:sport_id>/', views.filtered_sessions, name='recommendation'),
     path('choice/', choice, name='all_sports'),  # For displaying all sports
     path('choice/<int:sport_id>/', choice, name='choice'),  # For disp
+    path('save_team/<int:session_id>/', views.save_team, name='save_team'),
+    # path('team-selection/<int:session_id>/', views.team_selection_view, name='team_selection'),
     
 ]

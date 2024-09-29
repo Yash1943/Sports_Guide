@@ -32,6 +32,9 @@ def login_required(view_func):
 def home(request):
     return render(request, "authentication/index.html")
 
+def sports_homePage(request):
+    return redirect(request,"sports.html")
+
 @login_required
 def player(request):
     csports = Sport.objects.all()
@@ -41,6 +44,14 @@ def player(request):
 @login_required
 def admin1(request):
     return render(request, "admin1.html")
+
+
+
+def about_view(request):
+    return redirect(request,"authentication/about.html")
+
+def contact_view(request):
+    return redirect(request,"authentication/contact.html")
 
 @login_required
 def organizor(request):
@@ -259,3 +270,37 @@ def choice(request, sport_id=None):
     except Exception as e:
         logger.error(f"Error retrieving session: {e}")
         return render(request, "choice.html", {"session": None})
+
+from .models import Team, PlayerType, Player, Session
+
+def save_team(request, session_id):
+    if request.method == 'POST':
+        session = Session.objects.get(id=session_id)
+        team_data = request.POST.dict()
+        
+        # Loop through the posted data to create teams
+        for i in range(1, int(team_data['number_of_teams']) + 1):
+            team_name = team_data.get(f'team{i}Name')
+            player_type_name = team_data.get(f'team{i}PlayerType')
+
+            # Get or create the PlayerType
+            player_type, created = PlayerType.objects.get_or_create(name=player_type_name)
+
+            # Create the Team
+            team = Team.objects.create(name=team_name, session=session)
+
+            # Add players to the team based on player type
+            player_names = team_data.getlist(f'team{i}Players')
+            for player_name in player_names:
+                # Get or create the Player
+                player, created = Player.objects.get_or_create(name=player_name, player_type=player_type)
+                team.players.add(player)
+        
+        return redirect('team_list')  # Redirect to a list of teams or another view after saving
+
+    # Handle GET request (render form)
+    session = Session.objects.get(id=session_id)
+    context = {
+        'session': session,
+    }
+    return render(request, 'team_selection.html', context)

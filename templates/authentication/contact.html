@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - Sports-Guide</title>
+    <link
+        href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        rel="stylesheet"
+    />
+    <style>
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50%);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in {
+            opacity: 0;
+            transform: translateX(-50%);
+            animation: slideIn 1s ease-out forwards;
+        }
+
+        .slide-up {
+            opacity: 0;
+            transform: translateY(50%);
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        .slide-in:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .slide-in:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .slide-in:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        .slide-in:nth-child(4) {
+            animation-delay: 1.5s;
+        }
+
+        .hover-effect:hover {
+            background-color: #3b82f6;
+            color: white;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .hover-effect-blue:hover {
+            background-color: #2563eb;
+            color: white;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .responsive-text {
+            font-size: 1.25rem;
+        }
+
+        .responsive-header {
+            padding: 1rem;
+            background-color: #f3f4f6;
+        }
+
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .menu-mobile {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 75%;
+            height: 100%;
+            background-color: #f3f4f6;
+            padding: 1rem;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+            z-index: 20;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .menu-mobile.open {
+            display: flex;
+            flex-direction: column;
+            transform: translateX(0);
+        }
+
+        .menu-mobile ul {
+            flex-direction: column;
+            display: flex;
+            height: 100%;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .menu-mobile ul li {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Header -->
+    <header class="bg-gray-100 py-4 responsive-header">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-800 mx-4">
+                <a href="/">Sports-Guide</a>
+            </h1>
+            <button
+                id="menu-toggle"
+                class="md:hidden bg-gray-200 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+                <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 6h16M4 12h16m-7 6h7"
+                    />
+                </svg>
+            </button>
+            <nav id="menu" class="hidden md:flex md:items-center md:space-x-6">
+                <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-center md:text-left">
+                    <li><a href="/index" class="text-gray-600 hover:text-gray-800">Home</a></li>
+                    <li><a href="/sports" class="text-gray-600 hover:text-gray-800">Sports</a></li>
+                    <li><a href="/about" class="text-gray-600 hover:text-gray-800">About</a></li>
+                    <li><a href="/contact" class="text-gray-600 hover:text-gray-800">Contact</a></li>
+                    <li><a href="/signup" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md hover-effect">Sign Up</a></li>
+                    <li><a href="/signin" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover-effect-blue">Sign In</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Section -->
+    <main class="container mx-auto py-16 px-4 md:px-20">
+        <section class="text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 slide-in">Contact Us</h2>
+            <p class="text-lg md:text-xl mb-8 slide-in">Have questions or feedback? We're here to help! Fill out the form below or reach out to us directly.</p>
+            <div class="flex justify-center">
+                <form class="w-full max-w-lg bg-white p-8 shadow-lg rounded-lg space-y-6 slide-in">
+                    <div class="flex flex-col mb-4">
+                        <label for="name" class="text-left mb-2 text-gray-700">Name</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                        />
+                    </div>
+                    <div class="flex flex-col mb-4">
+                        <label for="email" class="text-left mb-2 text-gray-700">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                        />
+                    </div>
+                    <div class="flex flex-col mb-4">
+                        <label for="message" class="text-left mb-2 text-gray-700">Message</label>
+                        <textarea
+                            id="message"
+                            name="message"
+                            rows="4"
+                            class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                        ></textarea>
+                    </div>
+                    <button
+                        type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover-effect-blue"
+                    >
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 py-4 text-center text-white">
+        <p>&copy; 2024 Sports-Guide</p>
+        <div class="mt-4">
+            <a href="#" class="inline-block mx-2 hover:text-gray-400">Privacy Policy</a>
+            <a href="#" class="inline-block mx-2 hover:text-gray-400">Terms of Service</a>
+            <a href="#" class="inline-block mx-2 hover:text-gray-400">Contact Us</a>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="menu-overlay" class="menu-overlay"></div>
+
+    <!-- Mobile Menu -->
+    <nav id="mobile-menu" class="menu-mobile">
+        <button id="menu-close" class="absolute top-4 right-4 text-gray-800">
+            <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                />
+            </svg>
+        </button>
+        <ul class="flex flex-col space-y-4 mt-8">
+            <li><a href="/index" class="text-gray-600 hover:text-gray-800">Home</a></li>
+            <li><a href="/sports" class="text-gray-600 hover:text-gray-800">Sports</a></li>
+            <li><a href="/about" class="text-gray-600 hover:text-gray-800">About</a></li>
+            <li><a href="/contact" class="text-gray-600 hover:text-gray-800">Contact</a></li>
+            <li><a href="/signup" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md hover-effect">Sign Up</a></li>
+            <li><a href="/signin" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover-effect-blue">Sign In</a></li>
+        </ul>
+    </nav>
+
+    <script>
+        document.getElementById("menu-toggle").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.toggle("open");
+            document.getElementById("menu-overlay").style.display = "block";
+        });
+
+        document.getElementById("menu-close").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.remove("open");
+            document.getElementById("menu-overlay").style.display = "none";
+        });
+
+        document.getElementById("menu-overlay").addEventListener("click", function () {
+            document.getElementById("mobile-menu").classList.remove("open");
+            this.style.display = "none";
+        });
+    </script>
+</body>
+</html>
