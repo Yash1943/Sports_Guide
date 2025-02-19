@@ -49,7 +49,7 @@ class Team(models.Model):
     
 from django.db import models
 
-class Player_reco(models.Model):
+class Player_rec(models.Model):
     ROLE_CHOICES = [
         ('batsman', 'Batsman'),
         ('bowler', 'Bowler'),
