@@ -311,3 +311,17 @@ def save_team(request, session_id):
         'session': session,
     }
     return render(request, 'team_selection.html', context)
+
+
+
+from rest_framework import viewsets
+from .models import Player_reco, PlayerStats
+from .serializers import PlayerSerializer, PlayerStatsSerializer
+
+class PlayerViewSet(viewsets.ModelViewSet):
+    queryset = Player_reco.objects.all()
+    serializer_class = PlayerSerializer
+
+class PlayerStatsViewSet(viewsets.ModelViewSet):
+    queryset = PlayerStats.objects.all()
+    serializer_class = PlayerStatsSerializer

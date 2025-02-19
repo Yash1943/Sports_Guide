@@ -4,6 +4,14 @@ from . import views
 from .views import delete_sport
 from .views import filtered_sessions, choice
 
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import PlayerViewSet, PlayerStatsViewSet
+
+router = DefaultRouter()
+router.register(r'players_reco', PlayerViewSet)
+router.register(r'player-stats', PlayerStatsViewSet)
+
 urlpatterns = [
     path('', views.home, name='home'),
     path('index', views.home, name='home'),
@@ -35,5 +43,11 @@ urlpatterns = [
     path('choice/<int:sport_id>/', choice, name='choice'),  # For disp
     path('save_team/<int:session_id>/', views.save_team, name='save_team'),
     # path('team-selection/<int:session_id>/', views.team_selection_view, name='team_selection'),
-    
+
+
+
+
+    path('api/', include(router.urls)),
+    # path('api/', views.Player_reco, name= 'player_reco),
+   
 ]
