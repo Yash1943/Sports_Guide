@@ -16,7 +16,7 @@ from django.contrib import admin
 from .models import Player_reco, PlayerStats
 
 @admin.register(Player_reco)
-class PlayerAdmin(admin.ModelAdmin):
+class Player_recoAdmin(admin.ModelAdmin):
     list_display = ('name', 'role', 'team', 'age', 'nationality')
     search_fields = ('name', 'team')
 

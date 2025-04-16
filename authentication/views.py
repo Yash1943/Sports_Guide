@@ -325,3 +325,94 @@ class PlayerViewSet(viewsets.ModelViewSet):
 class PlayerStatsViewSet(viewsets.ModelViewSet):
     queryset = PlayerStats.objects.all()
     serializer_class = PlayerStatsSerializer
+
+from django.http import JsonResponse
+from authentication.ai import train_model, predict_winning_probability
+from authentication.models import Player_reco
+
+def recommend_players(request):
+    model = train_model()
+    if model is None:
+        return JsonResponse({"error": "Not enough player data"})
+
+    top_players = model.classes_[:5]  # Get top 5 players (example)
+    return JsonResponse({"recommended_players": list(top_players)})
+
+def predict_match(request, team1, team2):
+    result = predict_winning_probability(team1, team2)
+    return JsonResponse(result)
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from authentication.models import Player, PlayerStats
+from authentication.serializers import PlayerSerializer, PlayerStatsSerializer
+
+@api_view(['POST'])
+def store_player_data(request):
+    data = request.data
+
+    # Create or update Player
+    player, created = Player.objects.get_or_create(
+        name=data.get("name"),
+        defaults={"role": data.get("role"), "team": data.get("team")}
+    )
+
+    # Create or update Player Stats
+    PlayerStats.objects.update_or_create(
+        player=player,
+        defaults={
+            "batting_average": data.get("batting_average", 0.0),
+            "strike_rate": data.get("strike_rate", 0.0),
+            "total_runs": data.get("total_runs", 0),
+            "wickets": data.get("wickets", 0),
+            "bowling_average": data.get("bowling_average", 0.0),
+            "economy": data.get("economy", 0.0),
+            "matches_played": data.get("matches_played", 0),
+            "highest_score": data.get("highest_score", 0),
+            "best_bowling_figures": data.get("best_bowling_figures", ""),
+        }
+    )
+
+    return Response({"message": "Player data stored successfully!"})
+
+#data upload
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Player_reco, PlayerStats
+from .serializers import PlayerSerializer, PlayerStatsSerializer
+
+class UploadPlayersView(APIView):
+    def post(self, request):
+        players_data = request.data.get("players_reco", [])  # Get players from JSON
+
+        for player_data in players_data:
+            player, created = Player.objects.get_or_create(
+                name=player_data["name"],
+                defaults={
+                    "role": player_data["role"],
+                    "team": player_data.get("team", ""),
+                    "age": player_data.get("age", 18),
+                    "nationality": player_data.get("nationality", "Unknown"),
+                }
+            )
+
+            # Store or update player stats
+            PlayerStats.objects.update_or_create(
+                player=player,
+                defaults={
+                    "batting_average": player_data.get("batting_average", 0.0),
+                    "strike_rate": player_data.get("strike_rate", 0.0),
+                    "total_runs": player_data.get("total_runs", 0),
+                    "wickets": player_data.get("wickets", 0),
+                    "bowling_average": player_data.get("bowling_average", 0.0),
+                    "economy": player_data.get("economy", 0.0),
+                    "matches_played": player_data.get("matches_played", 0),
+                    "highest_score": player_data.get("highest_score", 0),
+                    "best_bowling_figures": player_data.get("best_bowling_figures", ""),
+                }
+            )
+        data = players_data.get("players_reco")
+        print(data)
+        return Response({"message": "Players stored successfully!"}, status=status.HTTP_201_CREATED)

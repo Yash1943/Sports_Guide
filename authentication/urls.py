@@ -8,6 +8,9 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import PlayerViewSet, PlayerStatsViewSet
 
+from authentication.views import recommend_players, predict_match
+from authentication.views import store_player_data
+# from .views import upload_players_csv
 router = DefaultRouter()
 router.register(r'players_reco', PlayerViewSet)
 router.register(r'player-stats', PlayerStatsViewSet)
@@ -49,5 +52,10 @@ urlpatterns = [
 
     path('api/', include(router.urls)),
     # path('api/', views.Player_reco, name= 'player_reco),
+    path('recommend-players/', recommend_players, name='recommend-players'),
+    path('predict-match/<str:team1>/<str:team2>/', predict_match, name='predict-match'),
+    path("api/store-player/", store_player_data, name="store_player"),
+    # path('upload-players/', upload_players_csv, name='upload-players'),
+    path('upload-players/', views.UploadPlayersView.as_view(), name='upload-players'),
    
 ]

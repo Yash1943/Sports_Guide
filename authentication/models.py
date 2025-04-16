@@ -49,7 +49,7 @@ class Team(models.Model):
     
 from django.db import models
 
-class Player_rec(models.Model):
+class Player_reco(models.Model):
     ROLE_CHOICES = [
         ('batsman', 'Batsman'),
         ('bowler', 'Bowler'),
@@ -78,11 +78,30 @@ class PlayerStats(models.Model):
     wickets = models.IntegerField(default=0)
     bowling_average = models.FloatField(default=0.0)
     economy = models.FloatField(default=0.0)
-    
-    # Additional stats (Optional)
-    matches_played = models.IntegerField(default=0)
-    highest_score = models.IntegerField(default=0)
-    best_bowling_figures = models.CharField(max_length=20, blank=True, null=True)  # Example: "5/30"
+
+    # New fields for AI model
+    recent_form = models.FloatField(default=0.0)  # Recent performance (1-10 scale)
+    fitness_level = models.FloatField(default=0.0)  # Player fitness rating
+    match_experience = models.IntegerField(default=0)  # Number of matches played
 
     def __str__(self):
         return f"Stats for {self.player.name}"
+
+class Match(models.Model):
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team1_matches')
+    team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team2_matches')
+    date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.team1.name} vs {self.team2.name} on {self.date}"
+
+class TeamComposition(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    players = models.ManyToManyField(Player)
+    is_team1 = models.BooleanField()  # True for team1, False for team2
+
+    def __str__(self):
+        return f"Team composition for {self.team.name} in {self.match}"
+
