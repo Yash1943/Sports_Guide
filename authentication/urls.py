@@ -59,4 +59,5 @@ urlpatterns = [
     path('upload-players/', views.UploadPlayersView.as_view(), name='upload-players'),
     path('create-player/', views.create_player_form, name='create_player_form'),
     path('create-player/submit/', views.create_player, name='create_player'),
+    path('api/player-stats/<path:player_name>/', views.get_player_stats, name='get_player_stats'),
 ]

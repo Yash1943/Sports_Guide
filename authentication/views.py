@@ -512,3 +512,49 @@ def create_player(request):
             return redirect('create_player_form')
     
     return redirect('create_player_form')
+
+@login_required
+def get_player_stats(request, player_name):
+    try:
+        # Decode the URL-encoded player name
+        player_name = player_name.replace('%20', ' ')
+        print(f"Looking up stats for player: {player_name}")
+        
+        # Try to get the player and their stats
+        player = Player.objects.filter(name=player_name).first()
+        if not player:
+            print(f"Player not found: {player_name}")
+            return JsonResponse({
+                "error": f"Player '{player_name}' not found in database",
+                "available_players": list(Player.objects.values_list('name', flat=True))
+            }, status=404)
+            
+        stats = PlayerStats.objects.filter(player=player).first()
+        if not stats:
+            print(f"Stats not found for player: {player_name}")
+            return JsonResponse({
+                "error": f"Statistics not found for player '{player_name}'"
+            }, status=404)
+            
+        print(f"Found stats for player {player_name}: {stats}")
+        
+        # Format the stats as a dictionary
+        stats_data = {
+            "stats": {
+                "batting_average": float(stats.batting_average) if stats.batting_average is not None else None,
+                "strike_rate": float(stats.strike_rate) if stats.strike_rate is not None else None,
+                "total_runs": stats.total_runs,
+                "wickets": stats.wickets,
+                "bowling_average": float(stats.bowling_average) if stats.bowling_average is not None else None,
+                "economy": float(stats.economy) if stats.economy is not None else None,
+                "matches_played": stats.matches_played,
+                "highest_score": stats.highest_score,
+                "best_bowling_figures": stats.best_bowling_figures if hasattr(stats, 'best_bowling_figures') else None,
+            }
+        }
+        return JsonResponse(stats_data)
+    except Exception as e:
+        print(f"Error getting stats for {player_name}: {str(e)}")
+        return JsonResponse({
+            "error": f"Error retrieving player statistics: {str(e)}"
+        }, status=500)
