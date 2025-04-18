@@ -13,10 +13,12 @@ from .tokens import generate_token
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from .models import Sport, Session, Player, PlayerStats, PlayerType
+from .models import Sport, Session, Player, PlayerStats, PlayerType, Team, Match, TeamComposition
 from .forms import SportForm
 from django.utils import timezone
 import logging
+import json
+from django.views.decorators.http import require_http_methods
 
 logger = logging.getLogger(__name__)
 
@@ -271,6 +273,9 @@ def choice(request, sport_id=None):
             session = get_object_or_404(Session, pk=sport_id)
             session.team_range = range(1, session.number_of_teams + 1)
             
+            # Store session ID in the session
+            request.session['session_id'] = session.id
+            
             # Get recommended players
             recommended_players = []
             try:
@@ -370,24 +375,42 @@ def recommend_players(request):
         player_data = []
         for player_name in top_players:
             try:
-                player = Player.objects.get(name=player_name)
-                # Determine role based on player_type
-                role = 'allrounder'  # default role
-                if player.player_type:
-                    player_type_name = player.player_type.name.lower()
-                    if 'bat' in player_type_name:
-                        role = 'batsman'
-                    elif 'bowl' in player_type_name:
-                        role = 'bowler'
+                # Get all players with this name and use the first one
+                players = Player.objects.filter(name=player_name)
+                if players.exists():
+                    player = players.first()
+                    # Determine role based on player_type
+                    role = 'allrounder'  # default role
+                    if player.player_type:
+                        player_type_name = player.player_type.name.lower()
+                        if 'bat' in player_type_name:
+                            role = 'batsman'
+                        elif 'bowl' in player_type_name:
+                            role = 'bowler'
+                        else:
+                            role = 'allrounder'
+                    
+                    player_data.append({
+                        "name": player.name,
+                        "role": role
+                    })
+                else:
+                    # If player not found, try to get from Player_reco model
+                    player_reco = Player_reco.objects.filter(name=player_name).first()
+                    if player_reco:
+                        player_data.append({
+                            "name": player_reco.name,
+                            "role": player_reco.role
+                        })
                     else:
-                        role = 'allrounder'
-                
-                player_data.append({
-                    "name": player.name,
-                    "role": role
-                })
-            except Player.DoesNotExist:
-                # If player not found, add them as an all-rounder
+                        # If not found in either model, add as all-rounder
+                        player_data.append({
+                            "name": player_name,
+                            "role": "allrounder"
+                        })
+            except Exception as e:
+                print(f"Error processing player {player_name}: {str(e)}")
+                # Add as all-rounder in case of any error
                 player_data.append({
                     "name": player_name,
                     "role": "allrounder"
@@ -557,4 +580,92 @@ def get_player_stats(request, player_name):
         print(f"Error getting stats for {player_name}: {str(e)}")
         return JsonResponse({
             "error": f"Error retrieving player statistics: {str(e)}"
+        }, status=500)
+
+@login_required
+@require_http_methods(["POST"])
+def save_teams(request):
+    try:
+        data = json.loads(request.body)
+        session = Session.objects.get(id=request.session.get('session_id'))
+        teams_data = data.get('teams', {})
+        
+        # Check for duplicate team names in the database for this session
+        team_names = [team_data['name'] for team_data in teams_data.values()]
+        existing_teams = Team.objects.filter(session=session, name__in=team_names)
+        if existing_teams.exists():
+            return JsonResponse({
+                'status': 'error',
+                'message': f'Teams with names {", ".join(t.name for t in existing_teams)} already exist in this session'
+            }, status=400)
+
+        # Store all players to check for duplicates
+        all_players = []
+        for team_data in teams_data.values():
+            all_players.extend(team_data['players'])
+        if len(all_players) != len(set(all_players)):
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Duplicate players found across teams'
+            }, status=400)
+
+        # Create teams and save players
+        created_teams = []
+        for team_data in teams_data.values():
+            # Create the team
+            team = Team.objects.create(
+                session=session,
+                name=team_data['name']
+            )
+            
+            # Add players to the team
+            for player_name in team_data['players']:
+                player, created = Player.objects.get_or_create(
+                    name=player_name,
+                    defaults={'player_type': PlayerType.objects.get_or_create(name='Unknown')[0]}
+                )
+                team.players.add(player)
+            
+            created_teams.append(team)
+
+        # Create match records for team combinations if there are exactly 2 teams
+        if len(created_teams) == 2:
+            match = Match.objects.create(
+                session=session,
+                team1=created_teams[0],
+                team2=created_teams[1],
+                date=timezone.now()
+            )
+
+            # Create team compositions
+            TeamComposition.objects.create(
+                team=created_teams[0],
+                match=match,
+                is_team1=True
+            ).players.set(created_teams[0].players.all())
+
+            TeamComposition.objects.create(
+                team=created_teams[1],
+                match=match,
+                is_team1=False
+            ).players.set(created_teams[1].players.all())
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Teams saved successfully',
+            'teams': [{
+                'id': team.id,
+                'name': team.name,
+                'player_count': team.players.count()
+            } for team in created_teams]
+        })
+    except Session.DoesNotExist:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Session not found'
+        }, status=404)
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
         }, status=500)

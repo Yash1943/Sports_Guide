@@ -102,6 +102,7 @@
       <h1 class="text-3xl font-bold text-center mb-8">Team Selection</h1>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {% if session %}
+        <div data-session-id="{{ session.id }}" class="hidden"></div>
         <div class="bg-white rounded-lg shadow-md p-6">
           <h2 class="text-lg font-semibold mb-4">{{ session.sport_name }}</h2>
           <p class="text-gray-700 mb-2">
@@ -446,16 +447,56 @@
       });
 
       function saveTeams() {
-        const teamsData = {
-          team1: {
-            name: document.querySelector('.selected-result[data-team-index="0"] input').value,
-            players: selectedPlayers.team1,
-          },
-          team2: {
-            name: document.querySelector('.selected-result[data-team-index="1"] input').value,
-            players: selectedPlayers.team2,
-          },
-        };
+        // Get all team containers
+        const teamContainers = document.querySelectorAll(".selected-result");
+        const teamsData = {};
+
+        // Collect data for all teams
+        teamContainers.forEach((container, index) => {
+          const teamNumber = index + 1;
+          const teamName = container.querySelector("input").value;
+          const selectedPlayersList = document.getElementById(`selectedPlayers-team${teamNumber}`);
+
+          if (!selectedPlayersList) {
+            console.error(`Could not find selected players list for team ${teamNumber}`);
+            return;
+          }
+
+          const players = Array.from(selectedPlayersList.children).map((li) =>
+            li.querySelector(".player-name").textContent.split(" (")[0].trim()
+          );
+
+          teamsData[`team${teamNumber}`] = {
+            name: teamName,
+            players: players,
+          };
+        });
+
+        // Validate that all teams have players and names
+        for (const [teamKey, teamData] of Object.entries(teamsData)) {
+          if (!teamData.name) {
+            alert(`Please enter a name for ${teamKey}`);
+            return;
+          }
+          if (teamData.players.length === 0) {
+            alert(`Please select players for ${teamKey}`);
+            return;
+          }
+        }
+
+        // Check for duplicate team names
+        const teamNames = Object.values(teamsData).map((team) => team.name);
+        if (new Set(teamNames).size !== teamNames.length) {
+          alert("Team names must be unique. Please use different names for each team.");
+          return;
+        }
+
+        // Check for duplicate players across teams
+        const allPlayers = Object.values(teamsData).flatMap((team) => team.players);
+        if (new Set(allPlayers).size !== allPlayers.length) {
+          alert("A player cannot be in multiple teams. Please check player selections.");
+          return;
+        }
 
         fetch("/save-teams/", {
           method: "POST",
@@ -463,16 +504,25 @@
             "Content-Type": "application/json",
             "X-CSRFToken": getCookie("csrftoken"),
           },
-          body: JSON.stringify(teamsData),
+          body: JSON.stringify({
+            teams: teamsData,
+            session_id: document.querySelector("[data-session-id]")?.dataset?.sessionId,
+          }),
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log("Teams saved successfully:", data);
-            alert("Teams saved successfully!");
+            if (data.status === "success") {
+              console.log("Teams saved successfully:", data);
+              alert("Teams saved successfully!");
+              // Optionally redirect to a teams list page or refresh the current page
+              // window.location.href = '/teams/';
+            } else {
+              throw new Error(data.message || "Failed to save teams");
+            }
           })
           .catch((error) => {
             console.error("Error saving teams:", error);
-            alert("Error saving teams. Please try again.");
+            alert("Error saving teams: " + error.message);
           });
       }
 

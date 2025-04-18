@@ -45,6 +45,7 @@ urlpatterns = [
     path('choice/', choice, name='all_sports'),  # For displaying all sports
     path('choice/<int:sport_id>/', choice, name='choice'),  # For disp
     path('save_team/<int:session_id>/', views.save_team, name='save_team'),
+    path('save-teams/', views.save_teams, name='save_teams'),  # New URL pattern for saving teams
     # path('team-selection/<int:session_id>/', views.team_selection_view, name='team_selection'),
 
 
