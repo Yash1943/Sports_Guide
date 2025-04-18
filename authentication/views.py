@@ -270,7 +270,33 @@ def choice(request, sport_id=None):
         if sport_id is not None:
             session = get_object_or_404(Session, pk=sport_id)
             session.team_range = range(1, session.number_of_teams + 1)
-            return render(request, "choice.html", {"session": session})
+            
+            # Get recommended players
+            recommended_players = []
+            try:
+                # First try to get players from Player_reco model
+                players = Player_reco.objects.all()
+                for player in players:
+                    recommended_players.append({
+                        'name': player.name,
+                        'role': player.role
+                    })
+            except:
+                # If that fails, use some default players
+                recommended_players = [
+                    {'name': 'Het Maheta', 'role': 'batsman'},
+                    {'name': 'Jaimin Patel', 'role': 'batsman'},
+                    {'name': 'Nil Patel', 'role': 'batsman'},
+                    {'name': 'Yash', 'role': 'bowler'},
+                    {'name': 'Yash Joshi', 'role': 'bowler'},
+                    {'name': 'hello', 'role': 'allrounder'},
+                    {'name': 'postgres', 'role': 'allrounder'}
+                ]
+            
+            return render(request, "choice.html", {
+                "session": session,
+                "recommended_players": recommended_players
+            })
         else:
             logger.error("No sport_id provided in URL")
             return render(request, "choice.html", {"session": None})
@@ -331,12 +357,47 @@ from authentication.ai import train_model, predict_winning_probability
 from authentication.models import Player_reco
 
 def recommend_players(request):
-    model = train_model()
-    if model is None:
-        return JsonResponse({"error": "Not enough player data"})
+    try:
+        # Use the AI model to get recommendations
+        model = train_model()
+        if model is None:
+            return JsonResponse({"error": "Not enough player data"})
 
-    top_players = model.classes_[:11]  # Get top 5 players (example)
-    return JsonResponse({"recommended_players": list(top_players)})
+        # Get top 11 players from the model
+        top_players = model.classes_[:11]
+
+        # Get player details from the Player model
+        player_data = []
+        for player_name in top_players:
+            try:
+                player = Player.objects.get(name=player_name)
+                # Determine role based on player_type
+                role = 'allrounder'  # default role
+                if player.player_type:
+                    player_type_name = player.player_type.name.lower()
+                    if 'bat' in player_type_name:
+                        role = 'batsman'
+                    elif 'bowl' in player_type_name:
+                        role = 'bowler'
+                    else:
+                        role = 'allrounder'
+                
+                player_data.append({
+                    "name": player.name,
+                    "role": role
+                })
+            except Player.DoesNotExist:
+                # If player not found, add them as an all-rounder
+                player_data.append({
+                    "name": player_name,
+                    "role": "allrounder"
+                })
+
+        print("Recommended players:", player_data)  # Debug print
+        return JsonResponse({"recommended_players": player_data})
+    except Exception as e:
+        print("Error in recommend_players:", str(e))  # Debug print
+        return JsonResponse({"error": str(e)})
 
 def predict_match(request, team1, team2):
     result = predict_winning_probability(team1, team2)

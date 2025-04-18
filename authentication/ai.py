@@ -8,25 +8,32 @@ def train_model():
     data = []
     players = PlayerStats.objects.all()
 
-    for player in players:
+    if not players.exists():
+        print("No player stats found in database")
+        return None
+
+    for player_stat in players:
         data.append([
-            player.player.name,
-            player.batting_average,
-            player.strike_rate,
-            player.total_runs,
-            player.wickets,
-            player.bowling_average,
-            player.economy,
-            player.recent_form,
-            player.fitness_level,
-            player.match_experience
+            player_stat.player.name,
+            player_stat.batting_average,
+            player_stat.strike_rate,
+            player_stat.total_runs,
+            player_stat.wickets,
+            player_stat.bowling_average,
+            player_stat.economy,
+            player_stat.recent_form,
+            player_stat.fitness_level,
+            player_stat.match_experience
         ])
 
     if not data:
-        return None  # Avoid error if no players exist
+        print("No valid player data found")
+        return None
 
+    print(f"Training model with {len(data)} players")  # Debug print
+    
     df = pd.DataFrame(data, columns=["name", "bat_avg", "strike_rate", "runs", "wickets", 
-                                     "bowl_avg", "economy", "recent_form", "fitness", "matches"])
+                                   "bowl_avg", "economy", "recent_form", "fitness", "matches"])
 
     X = df[["bat_avg", "strike_rate", "runs", "wickets", "bowl_avg", "economy", "recent_form", "fitness", "matches"]]
     y = df["name"]
@@ -34,6 +41,7 @@ def train_model():
     model = RandomForestClassifier(n_estimators=100)
     model.fit(X, y)
 
+    print("Model training completed")  # Debug print
     return model
 
 # Predict Winning Probability

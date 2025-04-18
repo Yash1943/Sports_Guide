@@ -109,11 +109,56 @@
     {% endif %}
 
     <script>
+      // Initialize players object for available players
       const players = {
-        batting: ["Player A", "Player B", "Player C", "Player D", "Player E"],
-        bowling: ["Player L", "Player M", "Player N", "Player O", "Player P"],
-        allrounder: ["Player W", "Player X", "Player Y", "Player Z", "Player AA"],
+        batting: [],
+        bowling: [],
+        allrounder: [],
       };
+
+      // Initialize selected players for each team
+      const selectedPlayers = {
+        team1: [],
+        team2: [],
+      };
+
+      // Keep track of selected players' roles
+      const playerRoles = {};
+
+      // Fetch recommended players when page loads
+      async function fetchRecommendedPlayers() {
+        try {
+          console.log("Fetching recommended players...");
+          const response = await fetch("/recommend-players/");
+          const data = await response.json();
+          console.log("Received data:", data);
+
+          if (data.recommended_players && Array.isArray(data.recommended_players)) {
+            // Clear existing players
+            players.batting = [];
+            players.bowling = [];
+            players.allrounder = [];
+
+            // Sort players by role and store role information
+            data.recommended_players.forEach((player) => {
+              if (player.role === "batsman") {
+                players.batting.push(player.name);
+              } else if (player.role === "bowler") {
+                players.bowling.push(player.name);
+              } else if (player.role === "allrounder") {
+                players.allrounder.push(player.name);
+              }
+              // Store player's role
+              playerRoles[player.name] = player.role;
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching recommended players:", error);
+        }
+      }
+
+      // Call the fetch function when page loads
+      fetchRecommendedPlayers();
 
       function submitTeams(event) {
         event.preventDefault();
@@ -123,255 +168,167 @@
         const selectElements = document.querySelectorAll("select");
         selectElements.forEach((select, index) => {
           const selectedOption = select.value;
+          const teamNumber = index + 1;
           const playerList = [...players[selectedOption]];
+
           const resultDiv = document.createElement("div");
           resultDiv.className = "selected-result";
           resultDiv.dataset.teamIndex = index;
 
-          // Create an input field for editing the team name
+          // Create team name input
           const teamNameInput = document.createElement("input");
           teamNameInput.type = "text";
           teamNameInput.className =
             "text-xl font-bold mb-2 w-full p-2 border border-gray-300 rounded-md";
-          teamNameInput.value = `Team ${index + 1}`;
+          teamNameInput.value = `Team ${teamNumber}`;
           resultDiv.appendChild(teamNameInput);
 
-          const ul = document.createElement("ul");
-          ul.className = "player-list";
-          ul.dataset.playerType = selectedOption;
+          // Create available players list (excluding already selected players)
+          const availablePlayersDiv = document.createElement("div");
+          availablePlayersDiv.className = "mt-4";
+          const availablePlayers = playerList.filter(
+            (player) =>
+              !selectedPlayers.team1.includes(player) && !selectedPlayers.team2.includes(player)
+          );
 
-          playerList.forEach((player, playerIndex) => {
-            const li = document.createElement("li");
+          availablePlayersDiv.innerHTML = `
+            <h3 class="font-semibold mb-2">Available ${selectedOption} Players:</h3>
+            <div class="grid grid-cols-1 gap-2">
+              ${availablePlayers
+                .map(
+                  (player) => `
+                <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                  <span>${player}</span>
+                  <button 
+                    onclick="addToTeam(${index}, '${player}', '${selectedOption}')"
+                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+                  >
+                    Add to Team
+                  </button>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+          `;
+          resultDiv.appendChild(availablePlayersDiv);
 
-            const playerName = document.createElement("span");
-            playerName.textContent = player;
-            li.appendChild(playerName);
-
-            const editPlayerButton = document.createElement("button");
-            editPlayerButton.className = "text-blue-500 ml-2";
-            editPlayerButton.textContent = "Edit";
-            editPlayerButton.onclick = () => editPlayer(index, playerIndex, selectedOption, ul);
-            li.appendChild(editPlayerButton);
-
-            const removePlayerButton = document.createElement("button");
-            removePlayerButton.className = "text-red-500 ml-2";
-            removePlayerButton.textContent = "Remove";
-            removePlayerButton.onclick = () => removePlayer(index, playerIndex, ul, selectedOption);
-            li.appendChild(removePlayerButton);
-
-            ul.appendChild(li);
-          });
-
-          const addPlayerForm = document.createElement("form");
-          addPlayerForm.onsubmit = (e) => addPlayer(e, index, ul, selectedOption);
-          addPlayerForm.className = "mt-4";
-
-          const addPlayerInput = document.createElement("input");
-          addPlayerInput.type = "text";
-          addPlayerInput.placeholder = "Enter player name";
-          addPlayerInput.className = "border border-gray-300 rounded-md p-2 mr-2";
-
-          const addPlayerButton = document.createElement("button");
-          addPlayerButton.type = "submit";
-          addPlayerButton.className =
-            "bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300";
-          addPlayerButton.textContent = "Add Player";
-
-          addPlayerForm.appendChild(addPlayerInput);
-          addPlayerForm.appendChild(addPlayerButton);
-
-          resultDiv.appendChild(ul);
-          resultDiv.appendChild(addPlayerForm);
-
-          const editButton = document.createElement("button");
-          editButton.className =
-            "bg-yellow-500 text-white py-1 px-3 rounded-md hover:bg-yellow-600 transition duration-300 mt-2";
-          editButton.textContent = "Edit Team Type";
-          editButton.onclick = () => editTeam(index);
-          resultDiv.appendChild(editButton);
+          // Create selected players list
+          const selectedPlayersDiv = document.createElement("div");
+          selectedPlayersDiv.className = "mt-4";
+          selectedPlayersDiv.innerHTML = `
+            <h3 class="font-semibold mb-2">Selected Players:</h3>
+            <ul id="selectedPlayers-team${teamNumber}" class="space-y-2"></ul>
+          `;
+          resultDiv.appendChild(selectedPlayersDiv);
 
           resultsContainer.appendChild(resultDiv);
+
+          // Re-populate selected players
+          const teamKey = `team${teamNumber}`;
+          selectedPlayers[teamKey].forEach((playerName) => {
+            const selectedPlayersList = document.getElementById(
+              `selectedPlayers-team${teamNumber}`
+            );
+            const li = document.createElement("li");
+            li.className = "flex items-center justify-between p-2 bg-white border rounded";
+            li.innerHTML = `
+              <span>${playerName} (${playerRoles[playerName] || "unknown"})</span>
+              <button 
+                onclick="removeFromTeam(${index}, '${playerName}')"
+                class="text-red-500 hover:text-red-700"
+              >
+                Remove
+              </button>
+            `;
+            selectedPlayersList.appendChild(li);
+          });
         });
       }
 
-      function editPlayer(teamIndex, playerIndex, playerType, ulElement) {
-        const li = ulElement.children[playerIndex];
-        const playerName = players[playerType][playerIndex];
+      function addToTeam(teamIndex, playerName, playerType) {
+        const teamNumber = teamIndex + 1;
+        const selectedPlayersList = document.getElementById(`selectedPlayers-team${teamNumber}`);
 
-        const input = document.createElement("input");
-        input.type = "text";
-        input.value = playerName;
-        input.className = "border border-gray-300 rounded-md p-1 mr-2";
-
-        li.innerHTML = "";
-        li.appendChild(input);
-
-        const savePlayerButton = document.createElement("button");
-        savePlayerButton.className = "text-green-500";
-        savePlayerButton.textContent = "Save";
-        savePlayerButton.onclick = () =>
-          savePlayer(teamIndex, playerIndex, input.value, playerType, ulElement);
-        li.appendChild(savePlayerButton);
-
-        const cancelPlayerButton = document.createElement("button");
-        cancelPlayerButton.className = "text-gray-500 ml-2";
-        cancelPlayerButton.textContent = "Cancel";
-        cancelPlayerButton.onclick = () => cancelEditPlayer(playerName, li);
-        li.appendChild(cancelPlayerButton);
-      }
-
-      function savePlayer(teamIndex, playerIndex, newPlayerName, playerType, ulElement) {
-        players[playerType][playerIndex] = newPlayerName;
-
-        const li = ulElement.children[playerIndex];
-        li.innerHTML = "";
-
-        const playerName = document.createElement("span");
-        playerName.textContent = newPlayerName;
-        li.appendChild(playerName);
-
-        const editPlayerButton = document.createElement("button");
-        editPlayerButton.className = "text-blue-500 ml-2";
-        editPlayerButton.textContent = "Edit";
-        editPlayerButton.onclick = () => editPlayer(teamIndex, playerIndex, playerType, ulElement);
-        li.appendChild(editPlayerButton);
-
-        const removePlayerButton = document.createElement("button");
-        removePlayerButton.className = "text-red-500 ml-2";
-        removePlayerButton.textContent = "Remove";
-        removePlayerButton.onclick = () =>
-          removePlayer(teamIndex, playerIndex, ulElement, playerType);
-        li.appendChild(removePlayerButton);
-      }
-
-      function cancelEditPlayer(originalName, liElement) {
-        liElement.innerHTML = "";
-
-        const playerName = document.createElement("span");
-        playerName.textContent = originalName;
-        liElement.appendChild(playerName);
-
-        const editPlayerButton = document.createElement("button");
-        editPlayerButton.className = "text-blue-500 ml-2";
-        editPlayerButton.textContent = "Edit";
-        editPlayerButton.onclick = () =>
-          editPlayer(
-            parseInt(liElement.closest(".selected-result").dataset.teamIndex),
-            parseInt(liElement.dataset.playerIndex),
-            liElement.closest(".player-list").dataset.playerType,
-            liElement.closest(".player-list")
-          );
-        liElement.appendChild(editPlayerButton);
-
-        const removePlayerButton = document.createElement("button");
-        removePlayerButton.className = "text-red-500 ml-2";
-        removePlayerButton.textContent = "Remove";
-        removePlayerButton.onclick = () =>
-          removePlayer(
-            parseInt(liElement.closest(".selected-result").dataset.teamIndex),
-            parseInt(liElement.dataset.playerIndex),
-            liElement.closest(".player-list"),
-            liElement.closest(".player-list").dataset.playerType
-          );
-        liElement.appendChild(removePlayerButton);
-      }
-
-      function removePlayer(teamIndex, playerIndex, ulElement, playerType) {
-        players[playerType].splice(playerIndex, 1);
-        const li = ulElement.children[playerIndex];
-        ulElement.removeChild(li);
-      }
-
-      function addPlayer(event, teamIndex, ulElement, playerType) {
-        event.preventDefault();
-        const input = event.target.querySelector("input");
-        const playerName = input.value.trim();
-
-        if (playerName) {
-          players[playerType].push(playerName);
-
-          const li = document.createElement("li");
-
-          const playerSpan = document.createElement("span");
-          playerSpan.textContent = playerName;
-          li.appendChild(playerSpan);
-
-          const editButton = document.createElement("button");
-          editButton.className = "text-blue-500 ml-2";
-          editButton.textContent = "Edit";
-          editButton.onclick = () =>
-            editPlayer(teamIndex, players[playerType].length - 1, playerType, ulElement);
-          li.appendChild(editButton);
-
-          const removeButton = document.createElement("button");
-          removeButton.className = "text-red-500 ml-2";
-          removeButton.textContent = "Remove";
-          removeButton.onclick = () =>
-            removePlayer(teamIndex, players[playerType].length - 1, ulElement, playerType);
-          li.appendChild(removeButton);
-
-          ulElement.appendChild(li);
-          input.value = "";
+        // Check if player is already in any team
+        if (
+          selectedPlayers.team1.includes(playerName) ||
+          selectedPlayers.team2.includes(playerName)
+        ) {
+          alert("This player is already selected for a team!");
+          return;
         }
+
+        // Add player to selected players array
+        selectedPlayers[`team${teamNumber}`].push(playerName);
+
+        // Create list item for selected player
+        const li = document.createElement("li");
+        li.className = "flex items-center justify-between p-2 bg-white border rounded";
+        li.innerHTML = `
+          <span>${playerName} (${playerRoles[playerName] || "unknown"})</span>
+          <button 
+            onclick="removeFromTeam(${teamIndex}, '${playerName}')"
+            class="text-red-500 hover:text-red-700"
+          >
+            Remove
+          </button>
+        `;
+        selectedPlayersList.appendChild(li);
+
+        // Refresh the display to update available players
+        submitTeams(new Event("submit"));
       }
 
-      function editTeam(teamIndex) {
-        const teamDiv = document.querySelector(`.selected-result[data-team-index="${teamIndex}"]`);
-        const select = document.querySelector(`#team${teamIndex}PlayerType`);
+      function removeFromTeam(teamIndex, playerName) {
+        const teamNumber = teamIndex + 1;
+        const teamKey = `team${teamNumber}`;
 
-        const currentType = select.value;
-        const newType = prompt(
-          "Enter new player type (batting, bowling, allrounder):"
-        ).toLowerCase();
-
-        if (["batting", "bowling", "allrounder"].includes(newType)) {
-          select.value = newType;
-          const ul = teamDiv.querySelector(".player-list");
-          ul.dataset.playerType = newType;
-          const playersList = [...players[newType]];
-
-          while (ul.firstChild) {
-            ul.removeChild(ul.firstChild);
-          }
-
-          playersList.forEach((player) => {
-            const li = document.createElement("li");
-            li.textContent = player;
-            ul.appendChild(li);
-          });
-        } else {
-          alert("Invalid player type.");
+        // Remove player from selected players array
+        const playerIndex = selectedPlayers[teamKey].indexOf(playerName);
+        if (playerIndex > -1) {
+          selectedPlayers[teamKey].splice(playerIndex, 1);
         }
+
+        // Refresh the display
+        submitTeams(new Event("submit"));
       }
+
+      // Add event listeners to player type selectors
+      document.querySelectorAll('select[id$="PlayerType"]').forEach((select) => {
+        select.addEventListener("change", (event) => {
+          submitTeams(event);
+        });
+      });
 
       function saveTeams() {
-        const teamsData = Array.from(document.querySelectorAll(".selected-result")).map(
-          (teamDiv) => {
-            return {
-              teamName: teamDiv.querySelector("input").value,
-              playerType: teamDiv.querySelector(".player-list").dataset.playerType,
-              players: Array.from(teamDiv.querySelectorAll(".player-list li")).map((li) =>
-                li.textContent.trim()
-              ),
-            };
-          }
-        );
+        const teamsData = {
+          team1: {
+            name: document.querySelector('.selected-result[data-team-index="0"] input').value,
+            players: selectedPlayers.team1,
+          },
+          team2: {
+            name: document.querySelector('.selected-result[data-team-index="1"] input').value,
+            players: selectedPlayers.team2,
+          },
+        };
 
         fetch("/save-teams/", {
-          // Adjust the URL to match your Django view
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-CSRFToken": getCookie("csrftoken"), // Ensure CSRF token is included
+            "X-CSRFToken": getCookie("csrftoken"),
           },
           body: JSON.stringify(teamsData),
         })
           .then((response) => response.json())
           .then((data) => {
             console.log("Teams saved successfully:", data);
+            alert("Teams saved successfully!");
           })
           .catch((error) => {
             console.error("Error saving teams:", error);
+            alert("Error saving teams. Please try again.");
           });
       }
 
