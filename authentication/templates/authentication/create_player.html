@@ -1,0 +1,111 @@
+{% extends 'authentication/base.html' %} {% block content %}
+<div class="container mt-5">
+  <h2>Create New Player</h2>
+  <form method="POST" action="{% url 'create_player' %}" class="mt-4">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6">
+        <h4>Player Information</h4>
+        <div class="form-group">
+          <label for="name">Player Name:</label>
+          <input type="text" class="form-control" id="name" name="name" required />
+        </div>
+        <div class="form-group">
+          <label for="player_type">Player Type:</label>
+          <select class="form-control" id="player_type" name="player_type" required>
+            <option value="">Select Player Type</option>
+            {% for type in player_types %}
+            <option value="{{ type.id }}">{{ type.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h4>Player Stats</h4>
+        <div class="form-group">
+          <label for="batting_average">Batting Average:</label>
+          <input
+            type="number"
+            step="0.01"
+            class="form-control"
+            id="batting_average"
+            name="batting_average"
+            required />
+        </div>
+        <div class="form-group">
+          <label for="strike_rate">Strike Rate:</label>
+          <input
+            type="number"
+            step="0.01"
+            class="form-control"
+            id="strike_rate"
+            name="strike_rate"
+            required />
+        </div>
+        <div class="form-group">
+          <label for="total_runs">Total Runs:</label>
+          <input type="number" class="form-control" id="total_runs" name="total_runs" required />
+        </div>
+        <div class="form-group">
+          <label for="wickets">Wickets:</label>
+          <input type="number" class="form-control" id="wickets" name="wickets" required />
+        </div>
+        <div class="form-group">
+          <label for="bowling_average">Bowling Average:</label>
+          <input
+            type="number"
+            step="0.01"
+            class="form-control"
+            id="bowling_average"
+            name="bowling_average"
+            required />
+        </div>
+        <div class="form-group">
+          <label for="economy">Economy:</label>
+          <input
+            type="number"
+            step="0.01"
+            class="form-control"
+            id="economy"
+            name="economy"
+            required />
+        </div>
+        <div class="form-group">
+          <label for="recent_form">Recent Form (1-10):</label>
+          <input
+            type="number"
+            step="0.1"
+            min="1"
+            max="10"
+            class="form-control"
+            id="recent_form"
+            name="recent_form"
+            required />
+        </div>
+        <div class="form-group">
+          <label for="fitness_level">Fitness Level (1-10):</label>
+          <input
+            type="number"
+            step="0.1"
+            min="1"
+            max="10"
+            class="form-control"
+            id="fitness_level"
+            name="fitness_level"
+            required />
+        </div>
+        <div class="form-group">
+          <label for="match_experience">Match Experience:</label>
+          <input
+            type="number"
+            class="form-control"
+            id="match_experience"
+            name="match_experience"
+            required />
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Create Player</button>
+  </form>
+</div>
+{% endblock %}

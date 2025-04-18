@@ -57,5 +57,6 @@ urlpatterns = [
     path("api/store-player/", store_player_data, name="store_player"),
     # path('upload-players/', upload_players_csv, name='upload-players'),
     path('upload-players/', views.UploadPlayersView.as_view(), name='upload-players'),
-   
+    path('create-player/', views.create_player_form, name='create_player_form'),
+    path('create-player/submit/', views.create_player, name='create_player'),
 ]

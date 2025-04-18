@@ -13,7 +13,7 @@ from .tokens import generate_token
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from .models import Sport, Session
+from .models import Sport, Session, Player, PlayerStats, PlayerType
 from .forms import SportForm
 from django.utils import timezone
 import logging
@@ -335,7 +335,7 @@ def recommend_players(request):
     if model is None:
         return JsonResponse({"error": "Not enough player data"})
 
-    top_players = model.classes_[:5]  # Get top 5 players (example)
+    top_players = model.classes_[:11]  # Get top 5 players (example)
     return JsonResponse({"recommended_players": list(top_players)})
 
 def predict_match(request, team1, team2):
@@ -416,3 +416,38 @@ class UploadPlayersView(APIView):
         data = players_data.get("players_reco")
         print(data)
         return Response({"message": "Players stored successfully!"}, status=status.HTTP_201_CREATED)
+
+def create_player_form(request):
+    player_types = PlayerType.objects.all()
+    return render(request, 'authentication/create_player.html', {'player_types': player_types})
+
+def create_player(request):
+    if request.method == 'POST':
+        try:
+            # Create Player instance
+            player = Player.objects.create(
+                name=request.POST['name'],
+                player_type_id=request.POST['player_type']
+            )
+
+            # Create PlayerStats instance
+            PlayerStats.objects.create(
+                player=player,
+                batting_average=float(request.POST['batting_average']),
+                strike_rate=float(request.POST['strike_rate']),
+                total_runs=int(request.POST['total_runs']),
+                wickets=int(request.POST['wickets']),
+                bowling_average=float(request.POST['bowling_average']),
+                economy=float(request.POST['economy']),
+                recent_form=float(request.POST['recent_form']),
+                fitness_level=float(request.POST['fitness_level']),
+                match_experience=int(request.POST['match_experience'])
+            )
+            
+            messages.success(request, 'Player created successfully!')
+            return redirect('create_player_form')
+        except Exception as e:
+            messages.error(request, f'Error creating player: {str(e)}')
+            return redirect('create_player_form')
+    
+    return redirect('create_player_form')
